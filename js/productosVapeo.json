@@ -1,0 +1,84 @@
+
+[
+    {
+        "id": 1,
+        "title": "Prueba 1",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "abc123",
+        "stock": 30
+    },
+    {
+        "id": "d3068e07-b07b-49a6-b083-1d2b09f119aa",
+        "title": "Prueba 2",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "def456",
+        "stock": 30
+    },
+    {
+        "id": "fceb7719-94a3-424b-b570-57a6ac0b5e07",
+        "title": "Prueba 3",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "def45645",
+        "stock": 30
+    },
+    {
+        "id": "af07a58c-d884-4502-a02c-434cee0eb2f5",
+        "title": "Prueba 4",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "def456wddadsa",
+        "stock": 30
+    },
+    {
+        "id": "5a76aed2-0070-4fdd-b4b6-4b25103926ef",
+        "title": "Prueba 5",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "def45dsfsdfs6",
+        "stock": 30
+    },
+    {
+        "id": "b13a6593-b206-494e-acc6-fd883ed13ee4",
+        "title": "Prueba 6",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "def45xcfdgdf6",
+        "stock": 30
+    },
+    {
+        "id": 7,
+        "title": "Prueba 7",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "def4dsfdgdfvcvxfsdf56",
+        "stock": 30
+    },
+    {
+        "id": "1fe11048-8c1b-4414-aa02-5458d219bc4b",
+        "title": "Prueba 8",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "5345tdsdfdef456",
+        "stock": 30
+    },
+    {
+        "id": "b9c9f07f-d769-4417-a9fe-9a2d0d4e5cd3",
+        "title": "Prueba 9",
+        "description": "Este es un producto de prueba",
+        "price": 300,
+        "thumbnail": "no image",
+        "code": "detyryyfgfokghdsdadefwsxdcxdf456",
+        "stock": 30
+    }
+]

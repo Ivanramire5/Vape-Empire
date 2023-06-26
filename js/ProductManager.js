@@ -1,82 +1,123 @@
-
+import utils from './utils.js';
+import crypto from 'crypto';
 class ProductManager {
-    constructor() {
+    constructor(path) {
+        this.path = path;
         this.products = []
     }
 
-    #newId = 0;
+    
+    async addProducts({title, description, price, thumbnail, code, stock}) {
+        if (
+            title == undefined || 
+            description == undefined || 
+            price == undefined || 
+            thumbnail == undefined || 
+            code == undefined || 
+            stock == undefined
+            ) {
+            throw new Error("Uno de los datos es incorrecto. Reintentelo");
+        }
 
-    getProducts() {
-        return this.products
+        try {
+            let data = await utils.readFile(this.path);
+            this.products = data?.length > 0 ? dato : [];
+        } catch (error){
+            console.log(error);
+        }
+
+        let codigoExiste = this.products.some((dato) => dato.code == code);
+
+        if (codigoExiste) {
+            throw new Error("El codigo que usted está intentando usar ya existe. Verifique los datos por favor");
+        } else {
+            const productoNuevo = {
+                id: crypto.randomUUID(),
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock,
+            };
+            this.products.push(productoNuevo);
+            try {
+                await utils.writeFile(this.path, this.products);
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
-    addProducts({title, description, price, thumbnail, code, stock}) {
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            return "Uno de los datos es incorrecto. Reintentelo"
-        }
-        const comprobarCodigo = this.products.find(product => product.code === code);
 
-        if (comprobarCodigo) {
-            return "el producto ya fue agregado a la lista"
+    async getProducts() {
+        try {
+            let data = await utils.readFile(this.path);
+            return data?.length > 0 ? this.products : "aun no hay datos registrados"
+        } catch (error) {
+            console.log(error)
         }
-
-        const newProduct = {
-            title: title,
-            description: description,
-            price: price,
-            thumbnail: thumbnail,
-            code: code,
-            stock: stock
-        }
-
-        this.products.push({...newProduct, id: this.#newId += 1})
-        return "Producto agregado correctamente"
     }
 
-    getProductsById(id) {
-        const productsId = this.products.find((products) => products.id === id)
+    async getProductsById(id) {
+        try {
+            let dato = await utils.readFile(this.path);
+            this.products = dato?.length > 0 ? dato : [];
+            let producto = this.products.find((dato) => dato.id === id)
+        
 
-        if (!productsId) {
-            return "No se encontró"
+        if (producto !== undefined) {
+            return producto;
+        } else {
+            return "no existe el producto que usted busca";
         }
-        return productsId
+    } catch (error) {
+        console.log(error);
     }
 }
 
-const productsTest = new ProductManager()
+async updateProductById(id, data) {
+    try {
+        let products = await utils.readFile(this.path)
+        this.products = products?.length > 0 ? products : [];
 
-
-const product1 = {
-    title: "Tested product 1",
-    description: "Este es un tested product",
-    price: 300,
-    thumbnail: "No image",
-    code: "abcdefg123456",
-    stock: 30
+        let productoIndex = this.products.findIndex((dato) => dato.id == id);
+        if (productoIndex !== -1) {
+            this.products[productoIndex] = {
+                ...this.products[productoIndex],
+                ...data,
+            };
+            await utils.writeFile(this.path, products);
+            return {
+                mensaje: "updated product",
+                producto: this.products[productoIndex],
+            };
+        } else {
+            return { mensaje: "El producto que usted busca no existe" };
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-const product2 = {
-    title: "Tested product 2",
-    description: "Este es un tested product",
-    price: 300,
-    thumbnail: "No image",
-    code: "abcdefg123456",
-    stock: 40
+async deleteProductById(id) {
+    try {
+        let products = await utils.readFile(this.path);
+        this.products = products?.length > 0 ? products : [];
+        let productoIndex = this.products.findIndex((dato) => dato.id === id);
+        if (productoIndex !== -1) {
+            let product = this.products[productoIndex];
+            this.products.splice(productoIndex, 1);
+            await utils.writeFile(this.path, products)
+            return { mensaje: "deleted product", producto: product };
+        } else {
+            return { mensaje: "this product doesn't exist" };
+        }
+    } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
-const product3 = {
-    title: "Tested product 3",
-    description: "Este es un tested product",
-    price: 300,
-    thumbnail: "No image",
-    code: "abcdefg123456",
-    stock: 10
-}
-
-console.log(productsTest.getProducts())
-
-console.log(productsTest.addProducts(product1))
-console.log(productsTest.addProducts(product2))
-console.log(productsTest.addProducts(product3))
-
-console.log("Producto identificado mediante su id:", productsTest.getProductsById(1))
-console.log(productsTest.getProductsById(5))
+export default {
+    ProductManager
+};
