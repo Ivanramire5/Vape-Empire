@@ -1,6 +1,6 @@
-import utils from './utils.js';
-import crypto from 'crypto';
-class ProductManager {
+import utils from "./utils.js";
+import crypto from "crypto";
+export class ProductManager {
     constructor(path) {
         this.path = path;
         this.products = []
