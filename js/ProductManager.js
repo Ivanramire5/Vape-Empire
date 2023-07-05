@@ -3,12 +3,11 @@ import utils from "./utils.js";
 import crypto from "crypto";
 
 export class ProductManager {
-    constructor(path, utils) {
+    constructor(path) {
         this.path = path;
-        this.utils = utils;
         this.products = [];
     }
-    async addProducts(title, description, price, thumbnail, code, stock) {
+    async addProduct(title, description, price, thumbnail, code, stock) {
         if (
             title == undefined ||
             description == undefined ||
@@ -17,7 +16,7 @@ export class ProductManager {
             code == undefined ||
             stock == undefined
         ) {
-            throw new Error("Uno de los datos es incorrecto. Reintentelo");
+            throw new Error("Uno de los datos es incorrecto. Corrijalo");
         }
   
         try {
@@ -30,9 +29,7 @@ export class ProductManager {
         let codigoExiste = this.products.some((dato) => dato.code == code);
   
         if (codigoExiste) {
-            throw new Error(
-                "El codigo que usted está intentando usar ya existe. Verifique los datos por favor"
-            );
+            throw new Error("El codigo que usted está intentando usar ya existe. Verifique los datos por favor");
         } else {
             const productoNuevo = {
             id: crypto.randomUUID(),
@@ -49,12 +46,13 @@ export class ProductManager {
         } catch (error) {
             console.log(error);
         }
-        }
     }
+}
   
     async getProducts() {
         try {
             let data = await utils.readFile(this.path);
+            this.products = data;
             return data?.length > 0 ? this.products : "aun no hay datos registrados";
         } catch (error) {
             console.log(error);
@@ -63,8 +61,8 @@ export class ProductManager {
   
     async getProductsById(id) {
         try {
-            let dato = await utils.readFile(this.path);
-            this.products = dato?.length > 0 ? dato : [];
+            let data = await utils.readFile(this.path);
+            this.products = data?.length > 0 ? data : [];
             let producto = this.products.find((dato) => dato.id === id);
     
             if (producto !== undefined) {
@@ -120,10 +118,10 @@ export class ProductManager {
         }
     }
 
-    let directorDeProductos = new ProductManager("./productos.json");
-    console.log(await directorDeProductos.getProducts());
+    let directorDeProductos = new ProductManager("./productosVapeo.json");
+    console.log(directorDeProductos.getProducts());
     console.log(
-        await directorDeProductos.addProducts(
+        await directorDeProductos.addProduct(
             "tested product",
             "this is a tested product",
             300,

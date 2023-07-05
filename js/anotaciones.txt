@@ -1,0 +1,6 @@
+
+//Use el puerto 4000 porque están más enfocados al entorno web
+
+//Despues de cada cambio hay que tumbar el servidor y despues iniciarlo
+
+//Para utilizar un query se coloca en el navegador este simbolo &
