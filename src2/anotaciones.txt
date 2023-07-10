@@ -1,0 +1,35 @@
+
+//Use el puerto 4000 porque están más enfocados al entorno web
+
+//Despues de cada cambio hay que tumbar el servidor y despues iniciarlo
+
+//Para utilizar un query se coloca en el navegador este simbolo &
+
+//Para probar la funcionalidad del codigo en thunderclient o en postman codear lo siguiente:
+    GET: http://localhost:4000/api/products/ (la id que queres traer)
+
+//Codigo prueba
+
+
+let directorDeProductos = new ProductManager("./productosVapeo.json");
+    console.log(directorDeProductos.getProducts());
+    console.log(
+        await directorDeProductos.addProduct(
+        )
+    );
+    console.log(await directorDeProductos.getProducts());
+    console.log(await directorDeProductos.getProductsById(0));
+    console.log(
+        await directorDeProductos.updateProductById({
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+            id,
+        })
+    );
+    console.log(await directorDeProductos.getProducts());
+    console.log(await directorDeProductos.deleteProductById(0));
+  
