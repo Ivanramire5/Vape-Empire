@@ -1,6 +1,7 @@
 
 import utils from "../utils.js";
 
+const socket = socket.io()
 
 export class ProductManager {
     constructor(path) {

@@ -4,8 +4,8 @@ import ProductManager from "../classes/ProductManager.js";
 
 const router = Router();
 
-let carrito = new CartManager("./src/datos/cart.json");
-let productos = new ProductManager("./src/datos/productosVapeo.json");
+let carrito = new CartManager("./src/cart.json");
+let productos = new ProductManager("./src/products.json");
 
 router.post("/", async (solicitud, respuesta) => {
     try {

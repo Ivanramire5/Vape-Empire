@@ -3,7 +3,7 @@ import { __dirname } from "./utils.js"
 
 console.log("dirname", __dirname);
 
-let miPrimerStore = new ProductManager("./productosVapeo.json");
+let miPrimerStore = new ProductManager("./productos.json");
 miPrimerStore.getProducts().then((data) => console.log(data))
 
 miSegundaStore

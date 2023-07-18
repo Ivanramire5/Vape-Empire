@@ -1,0 +1,86 @@
+
+    <div>
+        <div class="encabezadoTitulo">
+            <h1 class="tituloRealtime">Vape Empire</h1>
+            <h2 class="subtituloRealtime">Todos nuestros productos en venta</h2>
+        </div>
+    <form id="productForm" method="POST" action="/realtimeproducts">
+    <label class="nombreFormulario" for="productName">Nombre del producto:</label>
+    <input
+        type="text"
+        id="productName"
+        name="name"
+        placeholder="Nombre del producto"
+    />
+
+    <label class="tituloFormulario" for="productTitle">Título:</label>
+    <input
+        type="text"
+        id="productTitle"
+        name="title"
+        placeholder="Título del producto"
+    />
+
+    <label class="descripcionFormulario" for="productDescription">Descripción:</label>
+    <textarea
+        id="productDescription"
+        name="description"
+        placeholder="Descripción del producto"
+    ></textarea>
+
+    <label class="precioFormulario" for="productPrice">Precio:</label>
+    <input
+        type="number"
+        id="productPrice"
+        name="price"
+        step="0.01"
+        placeholder="Precio del producto"
+    />
+
+    <label class="imagenFormulario" for="productThumbnail">Thumbnail:</label>
+    <input
+        type="text"
+        id="productThumbnail"
+        name="thumbnail"
+        placeholder="URL del thumbnail"
+    />
+
+    <label class="codigoFormulario" for="productCode">Código:</label>
+    <input
+        type="text"
+        id="productCode"
+        name="code"
+        placeholder="Código del producto"
+    />
+
+    <label class="stockFormulario" for="productStock">Stock:</label>
+    <input
+        type="number"
+        id="productStock"
+        name="stock"
+        placeholder="Stock del producto"
+    />
+
+    <button class="botonFormulario" type="submit">Agregar</button>
+    </form>
+    <ul id="productList">
+    {{#each productos}}
+        <li>
+            <div class="divImage">
+                <img class="productImg" src={{image}} />
+            </div>
+            <div class="tarjetaProducto">
+                <h3>{{name}}</h3>
+                <p class="tituloTarjeta">Título: {{title}}</p>
+                <p>Descripción: {{description}}</p>
+                <p class="precioTarjeta">Precio: {{price}}</p>
+                <button class="btnEliminar" data-id="{{id}}">Eliminar producto</button>
+            </div>
+        </li>
+    {{/each}}
+    </ul>
+</div>
+
+
+
+
