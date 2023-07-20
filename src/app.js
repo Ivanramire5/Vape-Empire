@@ -6,8 +6,7 @@ import viewsRealTime from "./router/realTimeProduct.router.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { guardarProducto } from "./services/productUtils.js"
-
-
+import { eliminarProducto } from "./services/productUtils.js"
 const app = express();
 const httpServer = createServer(app)
 
@@ -23,7 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
 app.use("/", viewsRoutes);
-app.use("/realtime", viewsRealTime);
+app.use("/realtimeproducts", viewsRealTime);
+
 
 
 httpServer.listen(PORT, () => {
@@ -48,6 +48,11 @@ io.on("connection", (socket) => {
         io.emit("Nuevo producto agregado", nuevoProducto)
     });
 
+    socket.on("btnEliminar", productId => {
+        const {id} = productId
+        eliminarProducto(id)
+        socket.emit('btnEliminar', id)
+    })
     socket.on("disconnect", () => {
         console.log("El cliente se desconectó")
     })

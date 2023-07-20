@@ -74,12 +74,13 @@
                 <p class="tituloTarjeta">Título: {{title}}</p>
                 <p>Descripción: {{description}}</p>
                 <p class="precioTarjeta">Precio: {{price}}</p>
-                <button class="btnEliminar" data-id="{{id}}">Eliminar producto</button>
+                <button class="btnEliminar" id={{this.id}}>Eliminar producto</button>
             </div>
         </li>
     {{/each}}
     </ul>
 </div>
+<script src="/socket.io/socket.io.js"></script>
 
 
 
