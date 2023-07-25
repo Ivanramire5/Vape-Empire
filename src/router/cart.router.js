@@ -5,7 +5,7 @@ import ProductManager from "../classes/ProductManager.js";
 const router = Router();
 
 let carrito = new CartManager("./src/cart.json");
-let productos = new ProductManager("./src/products.json");
+let products = new ProductManager("./src/products.json");
 
 router.post("/", async (solicitud, respuesta) => {
     try {
@@ -16,7 +16,7 @@ router.post("/", async (solicitud, respuesta) => {
     }
 })
 
-.get("/:cid", async (solicitud, respuesta) => {
+router.get("/:cid", async (solicitud, respuesta) => {
     try {
         let { cid } = solicitud.params;
         let cart = await carrito.getCartById(parseInt(cid))
@@ -26,9 +26,9 @@ router.post("/", async (solicitud, respuesta) => {
     }
 })
 
-.post("/:cid/products/:pid", async (solicitud, respuesta) => {
+router.post("/:cid/products/:pid", async (solicitud, respuesta) => {
     try {
-        let product = await productos.getProductById(parseInt(solicitud.params.pid));
+        let product = await products.getProductById(parseInt(solicitud.params.pid));
         await carrito.addProductToCart(solicitud.params.cid, product.id);
         respuesta.send({ status: "Success", message: "Producto agregado con exito" })
     } catch (error) {

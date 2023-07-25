@@ -3,7 +3,7 @@ import { ProductManager } from "../classes/ProductManager.js"
 
 const router = Router();
 let productos = [];
-const productManager = new ProductManager("./src/dayos/productosVapeo.json")
+const productManager = new ProductManager("./src/products.json")
 
 
 router.get("/", async (solicitud, respuesta) => {

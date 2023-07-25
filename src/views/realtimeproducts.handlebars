@@ -64,23 +64,23 @@
     <button class="botonFormulario" type="submit">Agregar</button>
     </form>
     <ul id="productList">
-    {{#each productos}}
+    {{#each products}}
         <li>
             <div class="divImage">
-                <img class="productImg" src={{image}} />
+                <img class="productImg" src={{this.thumbnail}} />
             </div>
             <div class="tarjetaProducto">
-                <h3>{{name}}</h3>
-                <p class="tituloTarjeta">Título: {{title}}</p>
-                <p>Descripción: {{description}}</p>
-                <p class="precioTarjeta">Precio: {{price}}</p>
+                <h3>{{this.name}}</h3>
+                <p class="tituloTarjeta">{{this.title}}</p>
+                <p>{{this.description}}</p>
+                <p class="precioTarjeta">Precio: {{this.price}}</p>
                 <button class="btnEliminar" id={{this.id}}>Eliminar producto</button>
             </div>
         </li>
     {{/each}}
     </ul>
 </div>
-<script src="/socket.io/socket.io.js"></script>
+
 
 
 

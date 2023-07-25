@@ -7,6 +7,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { guardarProducto } from "./services/productUtils.js"
 import { eliminarProducto } from "./services/productUtils.js"
+import cartRouter from "./router/cart.router.js"
 const app = express();
 const httpServer = createServer(app)
 
@@ -20,9 +21,7 @@ app.use(express.static("public"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
-
-app.use("/", viewsRoutes);
-app.use("/realtimeproducts", viewsRealTime);
+app.use("/realtimeproducts", viewsRealTime, viewsRoutes, cartRouter);
 
 
 

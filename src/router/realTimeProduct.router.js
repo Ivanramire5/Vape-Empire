@@ -2,16 +2,15 @@ import { Router } from "express";
 
 import { __filename, __dirname } from "../utils.js";
 import {
-    obtenerListaDeProductos,
-    guardarProducto,
+    obtenerListaDeProducts,
 } from "../services/productUtils.js";
 
 const realtimeRouter = Router();
 
 realtimeRouter.get("/", (solicitud, respuesta) => {
-    const productos = obtenerListaDeProductos();
+    const products = obtenerListaDeProducts();
 
-    respuesta.render("realtimeproducts", { productos })
+    respuesta.render("realtimeproducts", { products })
 });
 
 export default realtimeRouter;

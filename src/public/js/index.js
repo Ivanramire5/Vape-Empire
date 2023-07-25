@@ -54,9 +54,9 @@ function updateProductList(products) {
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
 
-  products.forEach((product) => {
+  products.forEach((products) => {
     const li = document.createElement("li");
-    li.textContent = product.name;
+    li.textContent = products.name;
     productList.appendChild(li);
   });
 }
@@ -68,15 +68,15 @@ function updateProductList(products) {
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
 
-  products.forEach((product) => {
+  products.forEach((products) => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <h3>${product.name}</h3>
-      <p>Título: ${product.title}</p>
-      <p>Descripción: ${product.description}</p>
-      <p>Precio: ${product.price}</p>
-      <p>Thumbnail: ${product.thumbnail}</p>
-      <button class="btnEliminar" data-id="${product.id}">Eliminar</button>
+      <h3>${products.name}</h3>
+      <p>Título: ${products.title}</p>
+      <p>Descripción: ${products.description}</p>
+      <p>Precio: ${products.price}</p>
+      <p>Thumbnail: ${products.thumbnail}</p>
+      <button class="btnEliminar" data-id="${products.id}">Eliminar</button>
     `;
 
     const btnEliminar = li.querySelector(".btnEliminar");

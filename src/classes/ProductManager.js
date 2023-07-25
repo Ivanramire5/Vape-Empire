@@ -1,109 +1,73 @@
 
-import utils from "../utils.js";
+import fs from 'fs';
 
-const socket = socket.io()
-
-export class ProductManager {
+class ProductManager {
     constructor(path) {
-        this.path = path;
-        this.products = [];
+        this.path = path
     }
-    async addProduct(product) {
-        const { title, description, price, category, thumbnails, code, stock, status } = product;
-        if (
-            title == undefined ||
-            description == undefined ||
-            price == undefined ||
-            code == undefined ||
-            stock == undefined ||
-            status == undefined ||
-            category == undefined
-        ) {
-            throw new Error(
-                "Todos los campos son obligatorios" 
-            );
+
+    addProduct(product) {
+        const products = this.getProducts();
+        const newProduct = {
+            title: product.title,
+            description: product.description,
+            price: product.price,
+            thumbnails: product.thumbnails,
+            code: product.code,
+            stock: product.stock,
+            category: product.category,
+            status: product.status,
+            id: product.id, 
         }
 
-        try {
-            let data = await utils.readFile(this.path);
-            this.products = data?.length > 0 ? data : [];
-        } catch (error) {
-            console.log(error);
-        }
+        const checkExistence = products.findIndex(product => product.code === newProduct.code)
 
-        let codigoExiste = this.products.some((dato) => dato.code == code);
-
-        if (codigoExiste) {
-            throw new Error("El codigo que usted está intentando usar ya existe. Verifique los datos por favor");
+        if (checkExistence === -1) {
+            products.push(newProduct);
         } else {
-            const productoNuevo = {
-            id: data?.length ? data.length + 1 : 1,
-            title,
-            description,
-            price,
-            thumbnails,
-            code,
-            stock,
-        };
-        this.products.push(productoNuevo);
-        try {
-            await utils.writeFile(this.path, this.products);
-        } catch (error) {
-            console.log(error);
+            throw new Error("El código del producto ya existe")
         }
-    }
-}
 
-    async getProducts() {
-        try {
-            let data = await utils.readFile(this.path);
-            this.products = data;
-            return data?.length > 0 ? this.products : "aun no hay datos registrados";
-        } catch (error) {
-            console.log(error);
+        const dataToJson = JSON.stringify(products);
+        fs.writeFileSync(this.path, dataToJson)
+        return newProduct
+    }
+
+    getProducts() {
+        if (fs.existsSync(this.path)) {
+            const data = fs.readFileSync(this.path, 'utf-8');
+            return JSON.parse(data)
+        } else {
+            return []
         }
     }
 
-    async getProductsById(id) {
-        try {
-            let data = await utils.readFile(this.path);
-            this.products = data?.length > 0 ? data : [];
-            let producto = this.products.find((dato) => dato.id === id);
-    
-            if (producto !== undefined) {
-                return producto;
-            } else {
-                return "no existe el producto que usted busca";
-            }
-        } catch (error) {
-            console.log(error);
+    async getProductById(id) {
+        const products = await this.getProducts();
+        const index = await products.findIndex(product => product.id === id)
+
+        if (index === -1) {
+            throw new Error("El ID no se ha encontrado en los productos.")
+        } else {
+            return products[index]
         }
     }
 
-    async updateProductById(id, data) {
-        try {
-            let products = await utils.readFile(this.path);
-            this.products = products?.length > 0 ? products : [];
+    async updateProduct(id, product) {
+        const products = await this.getProducts();
+        const index = await products.findIndex(product => product.id === id)
 
-            let productoIndex = this.products.findIndex((dato) => dato.id == id);
-            if (productoIndex !== -1) {
-                this.products[productoIndex] = {
-                ...this.products[productoIndex],
-                ...data,
-            };
-            await utils.writeFile(this.path, products);
-            return {
-                mensaje: "updated product",
-                producto: this.products[productoIndex],
-            };
-            } else {
-                return { mensaje: "El producto que usted busca no existe" };
-            }
-        } catch (error) {
-            console.log(error);
+        if (index === -1) {
+            throw new Error("El ID no se ha encontrado");
+        } else {
+            const updatedProduct = { ...products[index], ...product, id }
+            products.splice(index, 1, updatedProduct)
+            const dataToJson = JSON.stringify(products);
+            fs.writeFileSync(this.path, dataToJson)
         }
+
     }
-  
+
     async deleteProductById(id) {
         try {
             let products = await utils.readFile(this.path);
