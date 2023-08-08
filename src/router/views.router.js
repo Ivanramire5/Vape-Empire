@@ -1,13 +1,10 @@
 import { Router } from "express";
 import { __filename, __dirname } from "../utils.js";
-import { obtenerListaDeProducts } from "../services/productUtils.js";
 
-const productRouter = Router();
+const router = Router();
 
-productRouter.get("/", (solicitud, respuesta) => {
-    const products = obtenerListaDeProducts()
-
-    respuesta.render("home", { products });
+router.get("/", (solicitud, respuesta) => {
+    respuesta.render("index", {Title: "Hello"});
 });
 
-export default productRouter;
+export default router;
