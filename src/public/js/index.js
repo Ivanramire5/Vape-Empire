@@ -92,5 +92,7 @@ function updateProductList(products) {
     productList.appendChild(li);
 }
 
-
+function addToCart(id) {
+  console.log("tenemos el id desde  el backend", id);
+}
 

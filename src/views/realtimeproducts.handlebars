@@ -6,81 +6,23 @@
         </div>
     <form id="productForm" method="POST" action="/realtimeproducts">
     <label class="nombreFormulario" for="productName">Nombre del producto:</label>
-    <input
-        type="text"
-        id="productName"
-        name="name"
-        placeholder="Nombre del producto"
-    />
-
-    <label class="tituloFormulario" for="productTitle">Título:</label>
-    <input
-        type="text"
-        id="productTitle"
-        name="title"
-        placeholder="Título del producto"
-    />
-
-    <label class="descripcionFormulario" for="productDescription">Descripción:</label>
-    <textarea
-        id="productDescription"
-        name="description"
-        placeholder="Descripción del producto"
-    ></textarea>
-
-    <label class="precioFormulario" for="productPrice">Precio:</label>
-    <input
-        type="number"
-        id="productPrice"
-        name="price"
-        step="0.01"
-        placeholder="Precio del producto"
-    />
-
-    <label class="imagenFormulario" for="productThumbnail">Thumbnail:</label>
-    <input
-        type="text"
-        id="productThumbnail"
-        name="thumbnail"
-        placeholder="URL del thumbnail"
-    />
-
-    <label class="codigoFormulario" for="productCode">Código:</label>
-    <input
-        type="text"
-        id="productCode"
-        name="code"
-        placeholder="Código del producto"
-    />
-
-    <label class="stockFormulario" for="productStock">Stock:</label>
-    <input
-        type="number"
-        id="productStock"
-        name="stock"
-        placeholder="Stock del producto"
-    />
-
-    <button class="botonFormulario" type="submit">Agregar</button>
-    </form>
     <ul id="productList">
-    {{#each products}}
-        <li>
-            <div class="divImage">
-                <img class="productImg" src={{this.thumbnail}} />
-            </div>
-            <div class="tarjetaProducto">
-                <h3>{{this.name}}</h3>
-                <p class="tituloTarjeta">{{this.title}}</p>
-                <p>{{this.description}}</p>
-                <p class="precioTarjeta">Precio: {{this.price}}</p>
-                <button class="btnEliminar" id={{this.id}}>Eliminar producto</button>
-            </div>
-        </li>
-    {{/each}}
+        {{#each products}}
+            <li>
+                <div class="divImage">
+                    <img class="productImg" src={{this.thumbnail}} />
+                </div>
+                <div class="tarjetaProducto">
+                    <h3>{{this.name}}</h3>
+                    <p class="tituloTarjeta">{{this.title}}</p>
+                    <p>{{this.description}}</p>
+                    <p class="precioTarjeta">Precio: {{this.price}}</p>
+                </div>
+            </li>
+        {{/each}}
     </ul>
 </div>
-
+<script src="../public/js/products.js"></script
 
 
 

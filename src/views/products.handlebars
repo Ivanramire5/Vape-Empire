@@ -1,12 +1,20 @@
+//Esto va para el carrito//
 
-<div>
-    <h1>Lista de nuestros productos</h1>
-    <ul>
-        {{#each products}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    {{#each products}}
         <li>
             <div class="datos">
                 <h2>{{title}}</h2>
                 <div class="descripcion-productos">
+                    <p>Id: {{this.id}}</p>
+                    <p>Name: {{this.title}}</p>
                     <p>Description: {{this.description}}</p>
                     <p>Category: {{this.category}}</p>
                 </div>
@@ -14,12 +22,14 @@
                     <p>Price: {{this.price}}</p>
                     <p>Stock: {{this.stock}}</p>
                 </div>
-                <div id="addToCart">
-                    <button class="boton">Agregar al carrito</button>
+                <div>
+                    <button class="agregar-carrito">Agregar al carrito</button>
                 </div>
             </div>
             <img src={{this.thumbnails}} alt={{this.title}}>
         </li>
         {{/each}}
-    </ul>
-</div>
+</body>
+</html>
+<script src="./js/index.js"></script>
+<script src="./js/products.js"></script>

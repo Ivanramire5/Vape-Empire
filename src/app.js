@@ -1,69 +1,95 @@
-import { engine } from "express-handlebars";
+
 import express from "express";
-import { __filename, __dirname } from "./utils.js";
-import viewsRoutes from "./router/views.router.js";
-import viewsRealTime from "./router/realTimeProduct.router.js";
+import { engine } from "express-handlebars";
+import viewsRoutes from "../routes/views.routes";
 import { Server } from "socket.io";
-import { guardarProducto } from "./services/productUtils.js"
-import { eliminarProducto } from "./services/productUtils.js"
-import cartRouter from "./router/cart.router.js"
+import ProductsModel from "./src/dao/models/products.model.js";
+import path from "path";
 import * as dotenv from "dotenv";
-
-
+import mongoose from "mongoose";
+import productsRouter from "./src/routes/products.routes.js";
+import carritoRouter from "./src/routes/carts.routes.js";
+import chatRouter from "./src/routes/chat.routes.js";
+import MessagesModel from "./src/dao/models/messages.model.js";
+import productManager from "./src/dao/dbManager/productManager.js";
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 4000;
-const httpServer = app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
-})
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
+const connection = mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});;
+connection.then(
+    () => {
+        console.log("Conexión a la base de datos exitosa");
+    },
+    (error) => {
+        console.log("Error en la conexión a la base de datos", error);
+    }
+);
 
-let messages = [];
-const io = new Server(httpServer)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", `${__dirname}/views`);
+app.set("views", path.join(path.dirname(new URL(import.meta.url).pathname), "views"));
 
-app.use(express.static("public"));
+app.use(express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "../public")));
 
+app.use("/productos",productsRouter)
+app.use("/carts",carritoRouter)
+app.use("/",viewsRoutes)
+app.use("/chat",chatRouter)
+app.use("/", productManager)
 
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-
-app.use("/products", viewsRealTime);
-app.use("/cartrouter", cartRouter)
-app.use("/", viewsRoutes)
-
-
-
-io.on("connection", (socket) => {
-    console.log("Nuevo cliente conectado!");
-    socket.on("new-user", (data) => {
-        socket.user = data.user;
-        socket.id = data.id;
-        io.emit("new-user-connected", {
-        user: socket.user,
-        id: socket.id,
-        });
-    });
-    socket.on("message", (data) => {
-        messages.push(data);
-        io.emit("messageLogs", messages);
-    });
-
-    socket.on("agregarProducto", (nuevoProducto) => {
-        console.log("Nuevo producto recibido desde el backend:", nuevoProducto);
-        guardarProducto(nuevoProducto);
-        socket.emit("Nuevo producto agregado", nuevoProducto)
-    });
-    socket.on("btnEliminar", productId => {
-        const {id} = productId
-        eliminarProducto(id)
-        socket.emit('btnEliminar', id)
-    })
-    socket.on("disconnect", () => {
-        console.log("El cliente se desconectó")
-    })
+//Usamos sockets
+const server = app.listen(PORT,()=>{
+    console.log("Listening on the port " + PORT)
+})
+server.on("error",(err)=>{
+    console.log(err)
 })
 
+const ioServer = new Server(server)
+
+ioServer.on("connection", async (socket) => {
+    console.log("Nueva conexión establecida");
+
+    socket.on("disconnect",()=>{
+        console.log("Usuario desconectado")
+    })
+
+    socket.on("new-product", async (data) => {
+        let title = data.title
+        let description = data.description
+        let code = data.code
+        let price = +data.price
+        let stock = +data.stock
+        let category = data.category
+        let thumbnail = data.thumbnail
+        console.log(title,description,code,price,stock,category,thumbnail)
+        console.log("Producto agregado correctamente")
+    });
+
+    socket.on("delete-product",async(data)=>{ 
+        let id = data;
+        let result = await ProductsModel.findByIdAndDelete(id);
+        console.log("Producto eliminado", result);
+    })
+    
+
+    const productos = await ProductsModel.find({}).lean()
+    socket.emit("update-products", productos)
+
+    socket.on("guardar-mensaje",(data)=>{
+        MessagesModel.insertMany([data])
+    })
+
+    const mensajes = await MessagesModel.find({}).lean()
+    socket.emit("enviar-mensajes",mensajes)
+    socket.on("Nuevos-mensajes",(data)=>{
+        console.log(data + " nuevos mensajes")
+    })
+});
