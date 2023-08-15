@@ -3,7 +3,7 @@ import __dirname from "../../utils.js";
 
 const path = __dirname + "../../data/cart.json";
 
-// Cla
+
 export default class Products {
   getAll = async () => {
     if (fs.existsSync(path)) {

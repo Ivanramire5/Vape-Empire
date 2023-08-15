@@ -1,17 +1,17 @@
 
 import express from "express";
 import { engine } from "express-handlebars";
-import viewsRoutes from "../routes/views.routes";
+import viewsRoutes from "./routes/views.routes.js";
 import { Server } from "socket.io";
-import ProductsModel from "./src/dao/models/products.model.js";
+import ProductsModel from "./dao/models/products.model.js";
 import path from "path";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
-import productsRouter from "./src/routes/products.routes.js";
-import carritoRouter from "./src/routes/carts.routes.js";
-import chatRouter from "./src/routes/chat.routes.js";
-import MessagesModel from "./src/dao/models/messages.model.js";
-import productManager from "./src/dao/dbManager/productManager.js";
+import productsRouter from "./routes/products.routes.js";
+import carritoRouter from "./routes/carts.routes.js";
+import chatRouter from "./routes/chat.routes.js";
+import MessagesModel from "./dao/models/messages.model.js";
+import productManager from "./dao/dbManager/productManager.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
