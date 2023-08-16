@@ -8,8 +8,8 @@ const router = Router()
 router.get("/",async(solicitud,respuesta)=>{
     const {limit = 10, page = 1, sort, query} = solicitud.query
     const results = await ProductsModel.paginate(query ? {category: query} : {},{limit, page, lean: true, sort: sort ? {price:1} : {price:-1}})
-    let prevLink = results.hasPrevPage ? `http://localhost:5000/productos/?page=${+page-1}&limit=${limit}&query=${query}&sort=${sort}` : null
-    let nextLink = results.hasNextPage ? `http://localhost:5000/productos/?page=${+page+1}&limit=${limit}&query=${query}&sort=${sort}` : null
+    let prevLink = results.hasPrevPage ? `http://localhost:4040/products/?page=${+page-1}&limit=${limit}&query=${query}&sort=${sort}` : null
+    let nextLink = results.hasNextPage ? `http://localhost:4040/products/?page=${+page+1}&limit=${limit}&query=${query}&sort=${sort}` : null
     results.prevLink = prevLink
     results.nextLink = nextLink
     respuesta.send(results)

@@ -7,6 +7,7 @@ import ProductsModel from "./dao/models/products.model.js";
 import path from "path";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
+import { __dirname } from "./utils.js"
 import productsRouter from "./routes/products.routes.js";
 import carritoRouter from "./routes/carts.routes.js";
 import chatRouter from "./routes/chat.routes.js";
@@ -14,7 +15,7 @@ import MessagesModel from "./dao/models/messages.model.js";
 import productManager from "./dao/dbManager/productManager.js";
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4040;
 const MONGO_URI = process.env.MONGO_URI;
 const connection = mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
@@ -28,23 +29,27 @@ connection.then(
         console.log("Error en la conexión a la base de datos", error);
     }
 );
-
+app.use(express.static(path.join(__dirname , "../public")))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", path.join(path.dirname(new URL(import.meta.url).pathname), "views"));
+app.set('views', path.join(__dirname, "./views"));
 
-app.use(express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "../public")));
+app.use(express.static(path.join(__dirname , "../public")))
 
-app.use("/productos",productsRouter)
+app.use("/products/",productsRouter)
 app.use("/carts",carritoRouter)
 app.use("/",viewsRoutes)
 app.use("/chat",chatRouter)
 app.use("/", productManager)
 
+app.get("/", (solicitud, respuesta) => {
+    respuesta.render(__dirname + "/views/home")
+})
 //Usamos sockets
+
 const server = app.listen(PORT,()=>{
     console.log("Listening on the port " + PORT)
 })
@@ -80,8 +85,8 @@ ioServer.on("connection", async (socket) => {
     })
     
 
-    const productos = await ProductsModel.find({}).lean()
-    socket.emit("update-products", productos)
+    const products = await ProductsModel.find({}).lean()
+    socket.emit("update-products", products)
 
     socket.on("guardar-mensaje",(data)=>{
         MessagesModel.insertMany([data])

@@ -4,11 +4,11 @@ import CartsModel from "../dao/models/carts.model.js";
 
 const router = Router()
 
-router.get("/",async (req,res)=>{
-    const {limit = 10, page = 1, sort, query} = req.query
+router.get("/",async (solicitud,respuesta)=>{
+    const {limit = 10, page = 1, sort, query} = solicitud.query
     const {docs,hasPrevPage,hasNextPage,nextPage,prevPage} = await ProductsModel.paginate(query ? {category: query} : {},{limit, page, lean: true, sort: sort ? {price:1} : {price:-1}})
-    res.render("home",{title: "Productos", 
-    productos: docs,  
+    respuesta.render("home",{title: "Products", 
+    products: docs,  
     hasPrevPage,
     hasNextPage,
     prevPage,
@@ -20,14 +20,14 @@ router.get("/",async (req,res)=>{
 })
 })
 
-router.get("/realTimeProducts",(req,res)=>{
-    res.render("realTimeProducts",{title: "Productos en tiempo real", script: "index.js"})
+router.get("/realTimeProducts",(solicitud,respuesta)=>{
+    respuesta.render("realTimeProducts",{title: "Productos en tiempo real", script: "index.js"})
 })
 
-router.post("/agregarProducto",async(req,res)=>{
-    const {title,description,code,price,stock,category,thumbnail} = req.body
+router.post("/agregarProducto",async(solicitud,respuesta)=>{
+    const {title,description,code,price,stock,category,thumbnail} = solicitud.body
     if(!title || !description || !code || !price || !stock || !category || !thumbnail){
-        return res.status(500).json({message : "Faltan datos"})
+        return respuesta.status(500).json({message : "Faltan datos"})
     }else{
         const productoNuevo = {
             title : title,
@@ -40,24 +40,24 @@ router.post("/agregarProducto",async(req,res)=>{
             thumbnail : thumbnail
         }
         let result = await ProductsModel.insertMany([productoNuevo])
-        return res.status(201).json({message: "Producto agregado exitosamente", data : result})
+        return respuesta.status(201).json({message: "Producto agregado exitosamente", data : result})
     }
 })
 
-router.get("/carts/:cid",async(req,res)=>{
-    const { cid } = req.params;
+router.get("/carts/:cid",async(solicitud,respuesta)=>{
+    const { cid } = solicitud.params;
     try {
         let carrito = await CartsModel.findOne({_id: cid }).lean()
         if (carrito) {
-            let productos = carrito.products;
-            console.log(productos)
-            res.render("carrito", { title: "Carrito", productos: productos });
+            let products = carrito.products;
+            console.log(products)
+            respuesta.render("carrito", { title: "Carrito", products: products });
         } else {
-            res.send("Carrito no encontrado");
+            respuesta.send("Carrito no encontrado");
         }
     } catch (err) { 
         console.log(err); 
-        res.send("Error al cargar el carrito");
+        respuesta.send("Error al cargar el carrito");
     }
 })
 

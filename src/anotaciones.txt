@@ -1,12 +1,12 @@
 
-//Use el puerto 5000 porque están más enfocados al entorno web
+//Use el puerto 8083 porque están más enfocados al entorno web
 
 //Despues de cada cambio hay que tumbar el servidor y despues iniciarlo
 
 //Para utilizar un query se coloca en el navegador este simbolo &
 
 //Para probar la funcionalidad del codigo en thunderclient o en postman codear lo siguiente:
-    GET: http://localhost:3000/api/products/ (la id que queres traer)
+    GET: http://localhost:8083/api/products/ (la id que queres traer)
 
 Colores para el e-commerce = [
     fondo: #EEEEEE o #F6F6F6 o #F4EEEE

@@ -44,10 +44,10 @@ router.post("/:cid/product/:pid",async(solicitud,respuesta)=>{
 router.delete("/:cid/products/:pid",async(solicitud,respuesta)=>{
     const {cid,pid} = solicitud.params
     let carrito = await CartsModel.findOne({_id: cid})
-    let productos = carrito.products
-    let producto = productos.findIndex((producto)=>producto.product.id === pid)
+    let products = carrito.products
+    let producto = products.findIndex((producto)=>producto.product.id === pid)
     if(producto !== -1){
-        productos.splice(producto,1)
+        products.splice(producto,1)
         let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
         return respuesta.json({message: "Producto eleminado correctamente del carrito", data: respuestault})
         }else{
@@ -70,10 +70,10 @@ router.put("/:cid/products/:pid",async(solicitud,respuesta)=>{
         const {cid,pid} = solicitud.params
         const {cantidad} = solicitud.body
         let carrito = await CartsModel.findOne({_id: cid})
-        let productos = carrito.products
-        let producto = productos.findIndex((producto)=>producto.product.id === pid)
+        let products = carrito.products
+        let producto = products.findIndex((producto)=>producto.product.id === pid)
         if(producto !== -1){
-            productos[producto].product.quantity = cantidad
+            products[producto].product.quantity = cantidad
             let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
             return respuesta.json({message: "Cantidad de ejemplarespuesta actualizada", data: respuestault})
             }else{
