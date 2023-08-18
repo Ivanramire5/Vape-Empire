@@ -18,14 +18,14 @@ router.get("/",async(solicitud,respuesta)=>{
 router.get("/:pid",async(solicitud,respuesta)=>{
     const {pid} = solicitud.params
     let producto = await ProductsModel.findById(pid)
-    return respuesta.json({message: "Producto seleccionado", producto : producto})
+    return respuesta.JSON({message: "Producto seleccionado", producto : producto})
 })
 //Modificar un producto
 router.put("/:pid",async(solicitud,respuesta)=>{
         const {pid} = solicitud.params
         const {title,description,code,price,stock,category,thumbnail} = solicitud.body
         if(!title || !description || !code || !price || !stock || !category || !thumbnail){
-            return res.status(500).json({message : "Faltan datos"})
+            return res.status(500).JSON({message : "Faltan datos"})
         }else{
             const producto = {
                 title : title,
@@ -38,7 +38,7 @@ router.put("/:pid",async(solicitud,respuesta)=>{
                 thumbnail : thumbnail
             }
             let result = await ProductsModel.findByIdAndUpdate(pid,producto)
-            return respuesta.json({message : "Producto modificado correctamente", data : result})
+            return respuesta.JSON({message : "Producto modificado correctamente", data : result})
         }
 })
 //Borrar un producto
@@ -46,16 +46,16 @@ router.delete("/:pid",async(solicitud,respuesta)=>{
     const {pid} = solicitud.params
     let result = await ProductsModel.findByIdAndDelete(pid)
     if(result === null){
-        return respuesta.status(404).json({message: "Producto no encontrado"})
+        return respuesta.status(404).JSON({message: "Producto no encontrado"})
     }else{
-        return respuesta.json({message: "Producto eliminado", data: result})
+        return respuesta.JSON({message: "Producto eliminado", data: result})
     }
 })
 //Agregar un producto
 router.post("/agregarProducto",async(solicitud,respuesta)=>{ 
     const {title,description,code,price,stock,category,thumbnail} = solicitud.body
     if(!title || !description || !code || !price || !stock || !category || !thumbnail){
-        return respuesta.status(500).json({message : "Faltan datos"})
+        return respuesta.status(500).JSON({message : "Faltan datos"})
     }else{
         const productoNuevo = {
             title : title,
@@ -68,7 +68,7 @@ router.post("/agregarProducto",async(solicitud,respuesta)=>{
             thumbnail : thumbnail
         }
         let result = await ProductsModel.insertMany([productoNuevo])
-        return respuesta.status(201).json({message: "Producto agregado exitosamente", data : result})
+        return respuesta.status(201).JSON({message: "Producto agregado exitosamente", data : result})
     }
 })
 

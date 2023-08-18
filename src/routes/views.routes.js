@@ -27,7 +27,7 @@ router.get("/realTimeProducts",(solicitud,respuesta)=>{
 router.post("/agregarProducto",async(solicitud,respuesta)=>{
     const {title,description,code,price,stock,category,thumbnail} = solicitud.body
     if(!title || !description || !code || !price || !stock || !category || !thumbnail){
-        return respuesta.status(500).json({message : "Faltan datos"})
+        return respuesta.status(500).JSON({message : "Faltan datos"})
     }else{
         const productoNuevo = {
             title : title,
@@ -40,7 +40,7 @@ router.post("/agregarProducto",async(solicitud,respuesta)=>{
             thumbnail : thumbnail
         }
         let result = await ProductsModel.insertMany([productoNuevo])
-        return respuesta.status(201).json({message: "Producto agregado exitosamente", data : result})
+        return respuesta.status(201).JSON({message: "Producto agregado exitosamente", data : result})
     }
 })
 

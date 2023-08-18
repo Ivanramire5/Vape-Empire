@@ -9,13 +9,13 @@ router.post("/",async(solicitud,respuesta)=>{
       products : []
     }
     let result = await CartsModel.insertMany([carrito])
-    return result.json({message : "Carrito creado correctamente", data: respuestault})
+    return result.JSON({message : "Carrito creado correctamente", data: respuestault})
 })
 //Tomar carrito por id
 router.get("/:cid",async(solicitud,respuesta)=>{
     const {cid} = solicitud.params
     let result = await CartsModel.findOne({_id: cid})
-    return result.json({message: "Carrito seleccionado", data: respuestault})
+    return result.JSON({message: "Carrito seleccionado", data: respuestault})
 })
 //Tomar carrito por id y sumarle un producto
 router.post("/:cid/product/:pid",async(solicitud,respuesta)=>{
@@ -34,9 +34,9 @@ router.post("/:cid/product/:pid",async(solicitud,respuesta)=>{
             });
         }
         const respuestault = await carrito.save();
-        return respuesta.json({ message: "Producto agregado", data: respuestault });
+        return respuesta.JSON({ message: "Producto agregado", data: respuestault });
     } else {
-        return respuesta.status(404).json({ message: "Carrito no encontrado" });
+        return respuesta.status(404).JSON({ message: "Carrito no encontrado" });
     }
 })
 
@@ -49,9 +49,9 @@ router.delete("/:cid/products/:pid",async(solicitud,respuesta)=>{
     if(producto !== -1){
         products.splice(producto,1)
         let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-        return respuesta.json({message: "Producto eleminado correctamente del carrito", data: respuestault})
+        return respuesta.JSON({message: "Producto eleminado correctamente del carrito", data: respuestault})
         }else{
-            return respuesta.status(404).json({message: "Producto no encontrado"})
+            return respuesta.status(404).JSON({message: "Producto no encontrado"})
         }
     })
 
@@ -62,7 +62,7 @@ router.put("/:cid",async(solicitud,respuesta)=>{
     let carrito = await CartsModel.findById(cid)
     carrito.products = data
     let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-    return respuesta.json({message: "Carrito actualizado", data: respuestault})
+    return respuesta.JSON({message: "Carrito actualizado", data: respuestault})
 })
 
 //Actualizar cantidad de ejemplarespuesta del producto seleccionado, del carrito especificado
@@ -75,9 +75,9 @@ router.put("/:cid/products/:pid",async(solicitud,respuesta)=>{
         if(producto !== -1){
             products[producto].product.quantity = cantidad
             let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-            return respuesta.json({message: "Cantidad de ejemplarespuesta actualizada", data: respuestault})
+            return respuesta.JSON({message: "Cantidad de ejemplarespuesta actualizada", data: respuestault})
             }else{
-                return respuesta.status(404).json({message: "Producto no encontrado"})
+                return respuesta.status(404).JSON({message: "Producto no encontrado"})
             }
         })
 
@@ -87,7 +87,7 @@ router.delete("/:cid",async(solicitud,respuesta)=>{
     let carrito = await CartsModel.findById(cid)
     carrito.products = []
     let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-    return respuesta.json({message: "Carrito vacio", data: respuestault})
+    return respuesta.JSON({message: "Carrito vacio", data: respuestault})
 })
 
 export default router
