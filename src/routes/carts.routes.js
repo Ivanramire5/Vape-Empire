@@ -4,90 +4,90 @@ import ProductsModel from "../dao/models/products.model.js";
 
 const router = Router()
 //Crear carrito
-router.post("/",async(solicitud,respuesta)=>{
+router.post("/",async(req,res)=>{
     const carrito = {
-      products : []
+        products : []
     }
     let result = await CartsModel.insertMany([carrito])
-    return result.JSON({message : "Carrito creado correctamente", data: respuestault})
+    return res.send({message : "Carrito creado correctamente", data: result})
 })
 //Tomar carrito por id
-router.get("/:cid",async(solicitud,respuesta)=>{
-    const {cid} = solicitud.params
+router.get("/:cid",async(req,res)=>{
+    const {cid} = req.params
     let result = await CartsModel.findOne({_id: cid})
-    return result.JSON({message: "Carrito seleccionado", data: respuestault})
+    return result.JSON({message: "Carrito seleccionado", data: result})
 })
 //Tomar carrito por id y sumarle un producto
-router.post("/:cid/product/:pid",async(solicitud,respuesta)=>{
-    const { cid, pid } = solicitud.params;
-    let carrito = await CartsModel.findOne({_id:cid});
-  
+router.post("/:cid/product/:pid",async(req,res)=>{
+    const { cid, pid } = req.params;
+    let carrito = await CartsModel.findOne({_id: cid});
+    console.log("ejemplo1", pid)
     if (carrito) {
-        const productoEnCarrito = carrito.products.find(producto => producto.product.id === pid);
+        const productoEnCarrito = carrito.products.find(producto => producto.product.toString() === pid);
         if (productoEnCarrito) {
             productoEnCarrito.quantity++;
         } else {
-            const producto = await ProductsModel.findById(pid);
             carrito.products.push({
-                product: producto._id,
+                product: pid,
                 quantity: 1
             });
         }
-        const respuestault = await carrito.save();
-        return respuesta.JSON({ message: "Producto agregado", data: respuestault });
+        const postEnCart = await carrito.save();
+        return res.send({ message: "Producto agregado", data: postEnCart });
     } else {
-        return respuesta.status(404).JSON({ message: "Carrito no encontrado" });
+        return res.send({ message: "Carrito no encontrado" });
     }
+    
 })
 
 //Eliminar del carrito el producto seleccionado
-router.delete("/:cid/products/:pid",async(solicitud,respuesta)=>{
-    const {cid,pid} = solicitud.params
+router.delete("/:cid/products/:pid",async(req,res)=>{
+    const {cid,pid} = req.params
     let carrito = await CartsModel.findOne({_id: cid})
     let products = carrito.products
     let producto = products.findIndex((producto)=>producto.product.id === pid)
     if(producto !== -1){
         products.splice(producto,1)
-        let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-        return respuesta.JSON({message: "Producto eleminado correctamente del carrito", data: respuestault})
+        let res = await CartsModel.findByIdAndUpdate(cid,carrito)
+        return res.JSON({message: "Producto eleminado correctamente del carrito", data: res})
         }else{
-            return respuesta.status(404).JSON({message: "Producto no encontrado"})
+            return res.status(404).JSON({message: "Producto no encontrado"})
         }
     })
 
 //Actualizar el carrito con un arreglo de productos especificado
-router.put("/:cid",async(solicitud,respuesta)=>{
-    const {cid} = solicitud.params
-    const {data} = solicitud.body
+router.put("/:cid",async(req,res)=>{
+    const {cid} = req.params
+    const {data} = req.body
     let carrito = await CartsModel.findById(cid)
     carrito.products = data
-    let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-    return respuesta.JSON({message: "Carrito actualizado", data: respuestault})
+    let carritoNuevo = await CartsModel.findByIdAndUpdate(cid,carrito)
+    return res.JSON({message: "Carrito actualizado", data: carritoNuevo})
 })
 
-//Actualizar cantidad de ejemplarespuesta del producto seleccionado, del carrito especificado
-router.put("/:cid/products/:pid",async(solicitud,respuesta)=>{
-        const {cid,pid} = solicitud.params
-        const {cantidad} = solicitud.body
+//Actualizar cantidad de ejemplares del producto seleccionado, del carrito especificado
+router.put("/:cid/products/:pid",async(req,res)=>{
+        const {cid,pid} = req.params
+        const {cantidad} = req.body
         let carrito = await CartsModel.findOne({_id: cid})
         let products = carrito.products
         let producto = products.findIndex((producto)=>producto.product.id === pid)
         if(producto !== -1){
             products[producto].product.quantity = cantidad
-            let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-            return respuesta.JSON({message: "Cantidad de ejemplarespuesta actualizada", data: respuestault})
+            let res = await CartsModel.findByIdAndUpdate(cid,carrito)
+            return res.JSON({message: "Cantidad de ejemplares actualizada", data: res})
             }else{
-                return respuesta.status(404).JSON({message: "Producto no encontrado"})
+                return res.status(404).JSON({message: "Producto no encontrado"})
             }
         })
 
 //Eliminar todos los productos del carrito
-router.delete("/:cid",async(solicitud,respuesta)=>{
-    const {cid} = solicitud.params
+router.delete("/:cid",async(req,res)=>{
+    const {cid} = req.params
     let carrito = await CartsModel.findById(cid)
     carrito.products = []
-    let respuestault = await CartsModel.findByIdAndUpdate(cid,carrito)
-    return respuesta.JSON({message: "Carrito vacio", data: respuestault})
+    let deleteCart = await CartsModel.findByIdAndUpdate(cid,carrito)
+    return res.JSON({message: "Carrito vacio", data: deleteCart})
 })
 
 export default router

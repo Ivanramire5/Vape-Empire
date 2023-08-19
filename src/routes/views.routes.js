@@ -7,7 +7,7 @@ const router = Router()
 router.get("/",async (solicitud,respuesta)=>{
     const {limit = 10, page = 1, sort, query} = solicitud.query
     const {docs,hasPrevPage,hasNextPage,nextPage,prevPage} = await ProductsModel.paginate(query ? {category: query} : {},{limit, page, lean: true, sort: sort ? {price:1} : {price:-1}})
-    respuesta.render("home",{title: "Products", 
+    respuesta.render("home",{Title: "Nuestros productos", 
     products: docs,  
     hasPrevPage,
     hasNextPage,
@@ -16,7 +16,6 @@ router.get("/",async (solicitud,respuesta)=>{
     limit,
     sort,
     query,
-    script: "agregarProductos.js"
 })
 })
 

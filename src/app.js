@@ -12,12 +12,13 @@ import productsRouter from "./routes/products.routes.js";
 import carritoRouter from "./routes/carts.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 import MessagesModel from "./dao/models/messages.model.js";
-import productManager from "./dao/dbManager/productManager.js";
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4040;
+console.log(typeof PORT);
 const MONGO_URI = process.env.MONGO_URI;
-const connection = mongoose.connect(MONGO_URI, {
+const connection = mongoose.connect("mongodb+srv://ivanr4amire5:gatonegro97@database1.hng81to.mongodb.net/e-commerce",  {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });;
@@ -29,28 +30,26 @@ connection.then(
         console.log("Error en la conexión a la base de datos", error);
     }
 );
-app.use(express.static(path.join(__dirname , "../public")))
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set('views', path.join(__dirname, "./views"));
 
-app.use(express.static(path.join(__dirname , "../public")))
 
+app.use(express.static(path.join(__dirname , "/public")))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/products/",productsRouter)
 app.use("/carts",carritoRouter)
 app.use("/",viewsRoutes)
 app.use("/chat",chatRouter)
-app.use("/", productManager)
 
 app.get("/", (solicitud, respuesta) => {
     respuesta.render(__dirname + "/views/home")
 })
 //Usamos sockets
 
-const server = app.listen(PORT,()=>{
+const server = app.listen(parseInt(PORT), ()=>{
     console.log("Listening on the port " + PORT)
 })
 server.on("error",(err)=>{
@@ -83,7 +82,9 @@ ioServer.on("connection", async (socket) => {
         let result = await ProductsModel.findByIdAndDelete(id);
         console.log("Producto eliminado", result);
     })
-    
+    socket.on("new-user", async(data) => {
+        console.log(data)
+    })
 
     const products = await ProductsModel.find({}).lean()
     socket.emit("update-products", products)
@@ -91,10 +92,15 @@ ioServer.on("connection", async (socket) => {
     socket.on("guardar-mensaje",(data)=>{
         MessagesModel.insertMany([data])
     })
-
-    const mensajes = await MessagesModel.find({}).lean()
-    socket.emit("enviar-mensajes",mensajes)
-    socket.on("Nuevos-mensajes",(data)=>{
-        console.log(data + " nuevos mensajes")
+    const messagE = [];
+    socket.on("message", async (data) => {
+        messagE.push(data)
+        console.log("Capturando el mensaje del cliente", data)
+        ioServer.emit("messageLogs", messagE)
+        const mensajes = await MessagesModel.find({}).lean()
+        socket.emit("messageLogs", mensajes)
+        socket.on("Nuevos-mensajes",(data)=> {
+            console.log(data + "nuevos mensajes")
+        })
     })
-});
+})

@@ -1,5 +1,4 @@
 
-import { JSON } from 'express';
 import fs from 'fs';
 
 class productManagers {

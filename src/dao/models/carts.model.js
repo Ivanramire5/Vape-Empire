@@ -4,16 +4,18 @@ import mongoose from "mongoose";
 const cartsCollection = "carts"
 
 const cartsSchema = new mongoose.Schema({
-    products : [
+    products : 
         {
-            product: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "products",
-                quantity : Number,
-            },
+            type: [{
+                product: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "products",
+                    quantity : Number,
+                }
+            }]
         },
-    ],
-})
+    },
+)
 
 cartsSchema.pre("findOne",function(next){
     this.populate("products.product")

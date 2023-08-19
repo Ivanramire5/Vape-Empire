@@ -1,10 +1,14 @@
 
+console.log("Estamos probando")
 const socket = io();
 
 let chatBox = document.getElementById("chatBox");
 console.log("prueba de chatBox");
 
 let user;
+
+//Sweet Alert 
+
 Swal.fire({
     title: 'Ingresa tu nombre',
     input: 'text',
@@ -46,11 +50,13 @@ socket.on("messageLogs", (data) => {
 })
 socket.on("new-user-connected", (data) => {
     if (data.id !== socket.id)
-        Swal.fire({
-            text: `${data.user} se ha conectado al chat`,
-            toast: true,
-            position: "top-end",
+    Swal.fire({
+        text: `${data.user} se ha conectado al chat`,
+        toast: true,
+        position: "top-end",
     });
 });
-
+socket.on("messagE", (data) => {
+    
+})
 //finalizamos chatbox

@@ -4,7 +4,7 @@ import { Router } from "express";
 const router = Router()
 
 router.get("/",(solicitud,respuesta)=>{
-    respuesta.render("chat",{title:"Chat", script: "chat.js"})
+    respuesta.render("chat",{title:"Chat"})
 })
 
 export default router
