@@ -3,8 +3,8 @@ import { Router } from "express";
 
 const router = Router()
 
-router.get("/",(solicitud,respuesta)=>{
-    respuesta.render("chat",{title:"Chat"})
+router.get("/",(req,send)=>{
+    send.render("chat",{title:"Chat"})
 })
 
 export default router
