@@ -23,7 +23,7 @@ router.get("/:pid",async(req,res)=>{
 //Modificar un producto
 router.put("/:pid",async(req,res)=>{
         const {pid} = req.params
-        const {title,description,code,price,stock,category,thumbnail} = solicitud.body
+        const {title,description,code,price,stock,category,thumbnail} = req.body
         if(!title || !description || !code || !price || !stock || !category || !thumbnail){
             return res.status(500).JSON({message : "Faltan datos"})
         }else{
@@ -53,7 +53,7 @@ router.delete("/:pid",async(req,res)=>{
 })
 //Agregar un producto
 router.post("/agregarProducto",async(req,res)=>{ 
-    const {title,description,code,price,stock,category,thumbnail} = solicitud.body
+    const {title,description,code,price,stock,category,thumbnail} = req.body
     if(!title || !description || !code || !price || !stock || !category || !thumbnail){
         return res.status(500).JSON({message : "Faltan datos"})
     }else{

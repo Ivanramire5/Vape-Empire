@@ -24,7 +24,7 @@ router.get("/realTimeProducts",(req,res)=>{
 })
 
 router.post("/agregarProducto",async(req,res)=>{
-    const {title,description,code,price,stock,category,thumbnail} = solicitud.body
+    const {title,description,code,price,stock,category,thumbnail} = req.body
     if(!title || !description || !code || !price || !stock || !category || !thumbnail){
         return res.status(500).JSON({message : "Faltan datos"})
     }else{
