@@ -43,9 +43,10 @@ connection.then(
 );
 
 //Sesion con mongo
+
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: process.env.URL_MONGOOSE,
+        mongoUrl: process.env.MONGO_URI,
         mongoOptions: {
             useNewUrlParser: true,
             useUnifiedTopology: true,
