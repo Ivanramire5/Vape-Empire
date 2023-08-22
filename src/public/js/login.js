@@ -8,13 +8,13 @@ form.addEventListener("submit",(e)=>{
     login(mail,password)
 })
 
-const login = async (mail,password)=>{
+const loguearse = async (mail, password)=>{
     const response = await fetch("/login",{
         method: "POST",
         headers:{
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({mail,password})
+        body: JSON.stringify({ mail, password })
     })
     const data = await response.json()
     console.log(data)
@@ -24,8 +24,8 @@ const login = async (mail,password)=>{
         },2000)
     }else{
         Swal.fire(
-            'Good job!',
-            'You clicked the button!',
+            'Usuario incorrecto',
+            'Reintentelo otra vez',
             'error'
         )
     }
