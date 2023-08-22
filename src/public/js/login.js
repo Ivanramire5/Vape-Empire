@@ -1,4 +1,4 @@
-let form = document.getElementById("loginDiv")
+let form = document.getElementById("botonLogin")
 
 form.addEventListener("submit",(e)=>{
     e.preventDefault()

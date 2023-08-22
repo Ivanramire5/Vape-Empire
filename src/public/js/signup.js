@@ -1,5 +1,5 @@
 
-let form = document.getElementById("signupForm")
+let form = document.getElementById("botonRegister")
 
 form.addEventListener("submit",(e)=>{
     e.preventDefault()
