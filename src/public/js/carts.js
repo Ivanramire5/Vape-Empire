@@ -1,15 +1,13 @@
-import fs from "fs";
-import __dirname from "../../utils.js";
-
-const path = __dirname + "../../data/cart.json";
 
 
-export default class Products {
+const path = "../../data/cart.json";
+
+class Products {
   getAll = async () => {
     if (fs.existsSync(path)) {
       try {
         let result = await fs.promises.readFile(path, "utf-8");
-        let data = await json.parse(result);
+        let data = JSON.parse(result);
         return data;
       } catch (err) {
         console.log("No se pudo leer el archivo: " + err);
@@ -18,6 +16,7 @@ export default class Products {
       return [];
     }
   };
+  
   saveProduct = async (product) => {
     try {
       let products = await this.getAll();
@@ -25,14 +24,14 @@ export default class Products {
         // Primer producto
         product.id = 1;
         products.push(product);
-        await fs.promises.writeFile(path, json.stringify(data));
+        await fs.promises.writeFile(path, JSON.stringify(products));
       } else {
-        user.id = users[users.length - 1].id + 1;
-        await fs.promises.writeFile(path, json.stringify(data));
-        return products;
+        product.id = products[products.length - 1].id + 1;
+        products.push(product);
+        await fs.promises.writeFile(path, JSON.stringify(products));
       }
     } catch (err) {
-      console.log("No se pudo escribir el archivo" + err);
+      console.log("No se pudo escribir el archivo: " + err);
     }
   };
 }
