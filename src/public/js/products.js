@@ -13,7 +13,7 @@ async function postCart(id, carrito) {
     const response = await fetch(`/api/carts/${carrito}/product/${id}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/JSON",
+        "Content-Type": "application/json",
       },
     });
     return response;

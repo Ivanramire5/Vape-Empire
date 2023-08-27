@@ -1,5 +1,5 @@
 
-let form = document.getElementById("botonRegister")
+let form = document.getElementById("signupForm")
 
 form.addEventListener("submit",(e)=>{
     e.preventDefault()
@@ -17,7 +17,7 @@ const signup = async (name,last_name,mail,user,password)=>{
         headers:{
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({name,last_name,mail,user,password})
+        body: json.stringify({name,last_name,mail,user,password})
     })
     const data = response.json()
     return data

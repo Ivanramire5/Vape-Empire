@@ -15,7 +15,7 @@ router.post("/",async(req,res)=>{
 router.get("/:cid",async(req,res)=>{
     const {cid} = req.params
     let result = await CartsModel.findOne({_id: cid})
-    return result.JSON({message: "Carrito seleccionado", data: result})
+    return result.json({message: "Carrito seleccionado", data: result})
 })
 //Tomar carrito por id y sumarle un producto
 router.post("/:cid/product/:pid",async(req,res)=>{
@@ -49,9 +49,9 @@ router.delete("/:cid/products/:pid",async(req,res)=>{
     if(producto !== -1){
         products.splice(producto,1)
         let res = await CartsModel.findByIdAndUpdate(cid,carrito)
-        return res.JSON({message: "Producto eleminado correctamente del carrito", data: res})
+        return res.json({message: "Producto eleminado correctamente del carrito", data: res})
         }else{
-            return res.status(404).JSON({message: "Producto no encontrado"})
+            return res.status(404).json({message: "Producto no encontrado"})
         }
     })
 
@@ -62,7 +62,7 @@ router.put("/:cid",async(req,res)=>{
     let carrito = await CartsModel.findById(cid)
     carrito.products = data
     let carritoNuevo = await CartsModel.findByIdAndUpdate(cid,carrito)
-    return res.JSON({message: "Carrito actualizado", data: carritoNuevo})
+    return res.json({message: "Carrito actualizado", data: carritoNuevo})
 })
 
 //Actualizar cantidad de ejemplares del producto seleccionado, del carrito especificado
@@ -75,9 +75,9 @@ router.put("/:cid/products/:pid",async(req,res)=>{
         if(producto !== -1){
             products[producto].product.quantity = cantidad
             let res = await CartsModel.findByIdAndUpdate(cid,carrito)
-            return res.JSON({message: "Cantidad de ejemplares actualizada", data: res})
+            return res.json({message: "Cantidad de ejemplares actualizada", data: res})
             }else{
-                return res.status(404).JSON({message: "Producto no encontrado"})
+                return res.status(404).json({message: "Producto no encontrado"})
             }
         })
 
@@ -87,7 +87,7 @@ router.delete("/:cid",async(req,res)=>{
     let carrito = await CartsModel.findById(cid)
     carrito.products = []
     let deleteCart = await CartsModel.findByIdAndUpdate(cid,carrito)
-    return res.JSON({message: "Carrito vacio", data: deleteCart})
+    return res.json({message: "Carrito vacio", data: deleteCart})
 })
 
 export default router
