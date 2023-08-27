@@ -75,7 +75,6 @@ function updateProductList(products) {
       <p>Descripción: ${products.description}</p>
       <p>Precio: ${products.price}</p>
       <p>Thumbnail: ${products.thumbnail}</p>
-      <button class="btnEliminar" data-id="${products.id}">Eliminar</button>
     `;
   });
 

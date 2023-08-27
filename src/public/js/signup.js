@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const signup = async (name, last_name, mail, user, password) => {
+        console.log(JSON.stringify({name, last_name, mail, user, password}))
         const response = await fetch("/signup", {
             method: "POST",
             headers: {
