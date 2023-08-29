@@ -113,8 +113,16 @@ server.on("error", (error) => {
     console.log("Error en servidor", error);
 });
 
+/*const environment = async () => {
+    await mongoose
+    .connect(STRING_CONNECTION)
+    .then(() => console.log("Conectado a la base de datos"))
+    .catch((error) => console.log("Error de conexion", error));
+};
 
-/*const ioServer = new Server(server)
+environment();
+
+const ioServer = new Server(server)
 
 ioServer.on("connection", async (socket) => {
     console.log("Nueva conexión establecida");
