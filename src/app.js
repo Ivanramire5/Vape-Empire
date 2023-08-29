@@ -8,24 +8,46 @@ import ProductsModel from "./dao/models/products.model.js";
 import path from "path";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
+import passport from "passport";
 import { __dirname } from "./utils.js"
 import productsRouter from "./routes/products.routes.js";
 import carritoRouter from "./routes/carts.routes.js";
 import chatRouter from "./routes/chat.routes.js";
 import MessagesModel from "./dao/models/messages.model.js";
-import sessionRouter from "./routes/session.routes.js"
+import sessionRoutes from "./routes/session.routes.js"
+import { isValidPassword } from "./utils.js";
+import initializePassport from "./config/passport.config.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
 //Dotenv
 dotenv.config();
 
-//Iniciamos express
-const app = express();
-
-//Puerto
-const PORT = process.env.PORT || 4040;
+//Puertos
+const PORT = process.env.PORT || 3000;
+const DB_USER = process.env.DB_USER;
+const DB_PASS = process.env.DB_PASS;
+const DB_NAME = process.env.DB_NAME;
+const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.pnpufdn.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
 console.log(typeof PORT);
+
+//Iniciamos express y lo usamos
+const app = express();
+app.engine("handlebars", engine());
+app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, "./views"));
+app.use(express.static(path.join(__dirname , "/public")))
+app.use(express.json());
+
+//Iniciamos el password
+initializePassport();
+app.use(
+    session({
+    secret: "coderhouse",
+    })
+);
+app.use(passport.initialize());
+app.use(express.urlencoded({ extended: true }));
 
 //Base de Mongo
 const MONGO_URI = process.env.MONGO_URI;
@@ -43,7 +65,6 @@ connection.then(
 );
 
 //Sesion con mongo
-
 app.use(session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
@@ -57,17 +78,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
-app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
-app.set('views', path.join(__dirname, "./views"));
-
-
-app.use(express.static(path.join(__dirname , "/public")))
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 //Autenticacion
-
 function auth(req, res, next) {
     if(req.session.rol) {
         return next()
@@ -81,7 +93,7 @@ app.use("/products/",productsRouter)
 app.use("/carts",carritoRouter)
 app.use("/views", auth, viewsRoutes)
 app.use("/chat",chatRouter)
-app.use("/", sessionRouter)
+app.use("/api/sessions", sessionRoutes)
 
 app.get("/", (req, res) => {
     res.render(__dirname + "/views/home")
@@ -91,11 +103,20 @@ app.get("/", (req, res) => {
 const server = app.listen(parseInt(PORT), ()=>{
     console.log("Listening on the port " + PORT)
 })
-server.on("error",(err)=>{
-    console.log(err)
-})
+server.on("error", (error) => {
+    console.log("Error en servidor", error);
+});
+const environment = async () => {
+    await mongoose
+    .connect(STRING_CONNECTION)
+    .then(() => console.log("Conectado a la base de datos"))
+    .catch((error) => console.log("Error de conexion", error));
+};
 
-const ioServer = new Server(server)
+environment();
+
+
+/*const ioServer = new Server(server)
 
 ioServer.on("connection", async (socket) => {
     console.log("Nueva conexión establecida");
@@ -142,4 +163,4 @@ ioServer.on("connection", async (socket) => {
             console.log(data + "nuevos mensajes")
         })
     })
-})
+})*/

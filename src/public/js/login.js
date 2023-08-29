@@ -19,6 +19,11 @@ const loguearse = async (mail, password) => {
     const data = await response.json();
     console.log(data);
     if (data.status === "OK") {
+        Swal.fire(
+            "Usuario ingresado correctamente",
+            "Ya puede ingresar a la pagina",
+            "success"
+        )
         setTimeout(() => {
             window.location.href = "http://localhost:3000/views";
         }, 2000);
