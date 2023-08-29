@@ -39,11 +39,15 @@ app.set('views', path.join(__dirname, "./views"));
 app.use(express.static(path.join(__dirname , "/public")))
 app.use(express.json());
 
+
+
 //Iniciamos el password
 initializePassport();
 app.use(
     session({
-    secret: "coderhouse",
+        resave: false,
+        saveUninitialized: true,
+        secret: "coderhouse",
     })
 );
 app.use(passport.initialize());
@@ -51,10 +55,12 @@ app.use(express.urlencoded({ extended: true }));
 
 //Base de Mongo
 const MONGO_URI = process.env.MONGO_URI;
-const connection = mongoose.connect("mongodb+srv://ivanr4amire5:gatonegro97@database1.hng81to.mongodb.net/e-commerce",  {
+
+//Usamos mongoose
+const connection = mongoose.connect("mongodb+srv://ivanr4amire5:gatonegro97@database1.hng81to.mongodb.net/e-commerce", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});;
+});
 connection.then(
     () => {
         console.log("Conexión a la base de datos exitosa");
@@ -106,14 +112,6 @@ const server = app.listen(parseInt(PORT), ()=>{
 server.on("error", (error) => {
     console.log("Error en servidor", error);
 });
-const environment = async () => {
-    await mongoose
-    .connect(STRING_CONNECTION)
-    .then(() => console.log("Conectado a la base de datos"))
-    .catch((error) => console.log("Error de conexion", error));
-};
-
-environment();
 
 
 /*const ioServer = new Server(server)
