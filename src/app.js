@@ -102,8 +102,9 @@ app.use("/chat",chatRouter)
 app.use("/api/sessions", sessionRoutes)
 
 app.get("/", (req, res) => {
-    res.render(__dirname + "/views/home")
-})
+    const viewPath = path.join(__dirname, "/views", "home");
+    res.render(viewPath);
+});
 //Usamos sockets para iniciar el servidor
 
 const server = app.listen(parseInt(PORT), ()=>{
