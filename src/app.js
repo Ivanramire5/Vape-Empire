@@ -34,8 +34,8 @@ console.log(typeof PORT);
 //Iniciamos express y lo usamos
 const app = express();
 app.engine("handlebars", engine());
-app.set("view engine", "ejs");
-app.set('views', path.join(__dirname, "./views"));
+app.set("view engine", "handlebars");
+app.set('views', path.join(__dirname, "/views"));
 app.use(express.static(path.join(__dirname , "/public")))
 app.use(express.json());
 
@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 const MONGO_URI = process.env.MONGO_URI;
 
 //Usamos mongoose
-const connection = mongoose.connect("mongodb+srv://ivanr4amire5:gatonegro97@database1.hng81to.mongodb.net/e-commerce", {
+const connection = mongoose.connect("mongodb+srv://ivanr4amire5:5xTrCI9UDqH2E2Ts@database1.hng81to.mongodb.net/e-commerce", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -93,18 +93,15 @@ function auth(req, res, next) {
         res.send("Error")
     }
 }
-
+// /sessions/saludo
 //RUTAS
-app.use("/products/",productsRouter)
-app.use("/carts",carritoRouter)
-app.use("/views", auth, viewsRoutes)
-app.use("/chat",chatRouter)
-app.use("/api/sessions", sessionRoutes)
 
-app.get("/", (req, res) => {
-    const viewPath = path.join(__dirname, "/views", "home");
-    res.render(viewPath);
-});
+app.use("/products/", productsRouter)
+app.use("/carts/", carritoRouter)
+app.use("/", viewsRoutes)
+app.use("/chat/", chatRouter)
+app.use("/api/sessions/", sessionRoutes)
+
 //Usamos sockets para iniciar el servidor
 
 const server = app.listen(parseInt(PORT), ()=>{

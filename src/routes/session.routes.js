@@ -1,8 +1,16 @@
 
 import { Router } from "express";
 import passport from "passport";
+
 const router = Router()
 
+
+
+router.post("/signup", async (req, res) => {
+    console.log(req.body)
+    const usuarios = await userModel.create([req.body])
+    return res.status(201).JSON({message: "Producto agregado exitosamente", data : result})
+})
 router.get(
     "/github",
     passport.authenticate("github", { scope: ["user:email"] }),

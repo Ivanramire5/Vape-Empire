@@ -3,8 +3,8 @@ const socket = io();
 
 socket.emit("connection", "nuevo cliente conectado");
 
-document.getElementById("productForm").addEventListener("submit", (event) => {
-  event.preventDefault();
+document.getElementById("productForm").addEventListener("submit", (e) => {
+  e.preventDefault();
   const productName = document.getElementById("productName").value;
   const productTitle = document.getElementById("productTitle").value;
   const productDescription = document.getElementById("productDescription").value;

@@ -4,19 +4,25 @@ import CartsModel from "../dao/models/carts.model.js";
 
 const router = Router()
 
-router.get("/",async (req,res)=>{
+router.get("/",(req,res)=>{
+    res.render("login", {title: "Inicie sesion"})
+})
+router.get("/signup",(req,res)=>{
+    res.render("signup", {title: "Registrar un usuario"})
+})
+router.get("/productos",async (req,res)=>{
     const {limit = 10, page = 1, sort, query} = req.query
     const {docs,hasPrevPage,hasNextPage,nextPage,prevPage} = await ProductsModel.paginate(query ? {category: query} : {},{limit, page, lean: true, sort: sort ? {price:1} : {price:-1}})
     res.render("home",{Title: "Nuestros productos", 
-    products: docs,  
-    hasPrevPage,
-    hasNextPage,
-    prevPage,
-    nextPage,
-    limit,
-    sort,
-    query,
-})
+        products: docs,  
+        hasPrevPage,
+        hasNextPage,
+        prevPage,
+        nextPage,
+        limit,
+        sort,
+        query,
+    })
 })
 
 router.get("/realTimeProducts",(req,res)=>{
