@@ -1,63 +1,80 @@
 
 //Importaciones
 import express from "express";
-import { engine } from "express-handlebars";
+import  { engine }  from "express-handlebars";
 import viewsRoutes from "./routes/views.routes.js";
 import { Server } from "socket.io";
 import ProductsModel from "./dao/models/products.model.js";
 import path from "path";
-import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import passport from "passport";
-import { __dirname } from "./utils.js"
+import  __dirname  from "./utils.js"
 import productsRouter from "./routes/products.routes.js";
 import carritoRouter from "./routes/carts.routes.js";
-import chatRouter from "./routes/chat.routes.js";
+import chatRoute from "./routes/chat.routes.js";
 import MessagesModel from "./dao/models/messages.model.js";
-import sessionRoutes from "./routes/session.routes.js"
-import { isValidPassword } from "./utils.js";
+import sessionRoute from "./routes/session.routes.js"
+import  isValidPassword  from "./utils.js";
 import initializePassport from "./config/passport.config.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-
+import LoginRoute from "./routes/login.routes.js";
+import ForgotRoute from "./routes/forgot.routes.js";
+import SignupRoute from "./routes/signup.routes.js";
+import SessionRoute from "./routes/session.routes.js";
 //Dotenv
+import * as dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 //Puertos
-const PORT = process.env.PORT || 3000;
+
 const DB_USER = process.env.DB_USER;
 const DB_PASS = process.env.DB_PASS;
 const DB_NAME = process.env.DB_NAME;
 const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.pnpufdn.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
-console.log(typeof PORT);
+
 
 //Iniciamos express y lo usamos
+
 const app = express();
+app.use(cookieParser("s3cr3t"))
+const PORT = process.env.PORT || 3000;
+
 app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
+app.set("view engine",  "handlebars");
 app.set('views', path.join(__dirname, "/views"));
 app.use(express.static(path.join(__dirname , "/public")))
 app.use(express.json());
 
+//Sesion con mongo
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        mongoOptions: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        },
+        ttl: 30
+    }),
+    secret: "mi_secreto",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false}
+}))
 
 
-//Iniciamos el password
+//Iniciamos el passport
 initializePassport();
-app.use(
-    session({
-        resave: false,
-        saveUninitialized: true,
-        secret: "coderhouse",
-    })
-);
 app.use(passport.initialize());
-app.use(express.urlencoded({ extended: true }));
+app.use(passport.session());
+
 
 //Base de Mongo
 const MONGO_URI = process.env.MONGO_URI;
 
 //Usamos mongoose
-const connection = mongoose.connect("mongodb+srv://ivanr4amire5:5xTrCI9UDqH2E2Ts@database1.hng81to.mongodb.net/e-commerce", {
+const connection = mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -70,20 +87,7 @@ connection.then(
     }
 );
 
-//Sesion con mongo
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI,
-        mongoOptions: {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        },
-        ttl: 100
-    }),
-    secret: "codigoSecreto",
-    resave: false,
-    saveUninitialized: false
-}))
+
 
 //Autenticacion
 function auth(req, res, next) {
@@ -92,33 +96,41 @@ function auth(req, res, next) {
     } else {
         res.send("Error")
     }
+    
 }
-// /sessions/saludo
-//RUTAS
 
-app.use("/products/", productsRouter)
-app.use("/carts/", carritoRouter)
-app.use("/", viewsRoutes)
-app.use("/chat/", chatRouter)
-app.use("/api/sessions/", sessionRoutes)
+//RUTAS
+app.use("/products", productsRouter)
+app.use("/carts", carritoRouter)
+app.use("/", LoginRoute)
+app.use("/signup", SignupRoute)
+app.use("/forgot", ForgotRoute)
+app.use("/chat", chatRoute)
+app.use("/api/sessions", SessionRoute)
+
 
 //Usamos sockets para iniciar el servidor
 
-const server = app.listen(parseInt(PORT), ()=>{
-    console.log("Listening on the port " + PORT)
+
+const server = app.listen(PORT, ()=>{
+    console.log(`Listening on the port ${PORT}`)
 })
-server.on("error", (error) => {
-    console.log("Error en servidor", error);
+server.on("error", (err) => {
+    console.log("Error en servidor", err);
 });
 
-/*const environment = async () => {
-    await mongoose
-    .connect(STRING_CONNECTION)
-    .then(() => console.log("Conectado a la base de datos"))
-    .catch((error) => console.log("Error de conexion", error));
+const environment = async () => {
+    try {
+        await mongoose.connect(MONGO_URI);
+        console.log("Base de datos conectada");
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 environment();
+/*
+
 
 const ioServer = new Server(server)
 

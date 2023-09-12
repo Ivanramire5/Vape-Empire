@@ -1,0 +1,8 @@
+MONGO_URI = "mongodb://localhost:3000"
+PORT =" ####";
+DB_USER="userdb"
+DB_PASS="sasdadasxfew"
+DB_NAME="users"
+GITHUB_CLIENT_ID: "Iv1.dsfsfsfer"
+GITHUB_CLIENT_SECRET: "cdfsfsdfsf"
+GITHUB_CALLBACK_URL: "http://http://localhost:3000/api/sessions/githubcallback"

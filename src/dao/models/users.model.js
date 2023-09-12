@@ -3,13 +3,13 @@ import mongoose from "mongoose";
 const userCollection = "users";
 
 const userSchema = new mongoose.Schema({
-    first_name: String,
-    last_name: String,
-    email: String,
-    age: Number,
-    password: String,
+    first_name: { type: String, required: true, max: 100 },
+    last_name: { type: String, required: true, max: 100 },
+    email: { type: String, required: true, max: 100, unique: true },
+    password: { type: String, required: true, max: 100 },
+    age: { type: Number, required: true, max: 100 },
 });
 
-const userModel = mongoose.model(userCollection, userSchema);
+const User = mongoose.model(userCollection, userSchema);
 
-export default userModel;
+export default User;
