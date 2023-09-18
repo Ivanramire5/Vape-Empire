@@ -4,7 +4,7 @@ import express from "express";
 import  { engine }  from "express-handlebars";
 import viewsRoutes from "./routes/views.routes.js";
 import { Server } from "socket.io";
-import ProductsModel from "./dao/models/products.model.js";
+import ProductsModel from "./dao/mongo/models/products.model.js";
 import path from "path";
 import mongoose from "mongoose";
 import passport from "passport";
@@ -12,7 +12,7 @@ import  __dirname  from "./utils.js"
 import productsRouter from "./routes/products.routes.js";
 import carritoRouter from "./routes/carts.routes.js";
 import chatRoute from "./routes/chat.routes.js";
-import MessagesModel from "./dao/models/messages.model.js";
+import MessagesModel from "./dao/mongo/models/messages.model.js";
 import sessionRoute from "./routes/session.routes.js"
 import  isValidPassword  from "./utils.js";
 import initializePassport from "./config/passport.config.js";
@@ -22,6 +22,8 @@ import LoginRoute from "./routes/login.routes.js";
 import ForgotRoute from "./routes/forgot.routes.js";
 import SignupRoute from "./routes/signup.routes.js";
 import SessionRoute from "./routes/session.routes.js";
+import toysRouter from "./routes/toys.routes.js";
+import userRouter from "./routes/user.routes.js";
 //Dotenv
 import * as dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -107,6 +109,8 @@ app.use("/signup", SignupRoute)
 app.use("/forgot", ForgotRoute)
 app.use("/chat", chatRoute)
 app.use("/api/sessions", SessionRoute)
+app.use("/toys", toysRouter)
+app.use("/users", userRouter)
 
 
 //Usamos sockets para iniciar el servidor

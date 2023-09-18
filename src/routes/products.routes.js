@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import ProductsModel from "../dao/models/products.model.js"
+import ProductsModel from "../dao/mongo/models/products.model.js"
 
 const router = Router()
 
@@ -14,6 +14,7 @@ router.get("/",async(req,res)=>{
     results.nextLink = nextLink
     res.send(results)
 })
+
 //Tomar producto por id
 router.get("/:pid",async(req,res)=>{
     const {pid} = req.params
@@ -41,6 +42,7 @@ router.put("/:pid",async(req,res)=>{
             return respuesta.json({message : "Producto modificado correctamente", data : result})
         }
 })
+
 //Borrar un producto
 router.delete("/:pid",async(req,res)=>{
     const {pid} = req.params
@@ -51,6 +53,7 @@ router.delete("/:pid",async(req,res)=>{
         return res.json({message: "Producto eliminado", data: result})
     }
 })
+
 //Agregar un producto
 router.post("/agregarProducto",async(req,res)=>{ 
     const {title,description,code,price,stock,category,thumbnail} = req.body
