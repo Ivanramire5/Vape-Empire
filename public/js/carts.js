@@ -1,7 +1,5 @@
 
 
-const path = "../../data/cart.json";
-
 class Products {
   getAll = async () => {
     if (fs.existsSync(path)) {

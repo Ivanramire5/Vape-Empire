@@ -1,6 +1,6 @@
 import fs from "fs"; 
 import path from "path"; 
-import { __dirname } from "../utils.js"
+import { __dirname } from "../../config/utils.js"
 
 // Exportamos la función para obtener la lista de productos
 export function obtenerListaDeProducts() {

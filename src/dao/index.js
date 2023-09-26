@@ -1,10 +1,10 @@
-import memoryToyDao from "./memory/toys.dao.js";
-import mongoToyDao from "./mongo/toys.js";
-import memoryUserDao from "./memory/users.dao.js";
-import mongoUserDao from "./mongo/models/users.model.js";
-import { PERSISTENCE } from "../config/config.js";
 
-export const TOYSDAO =
-  PERSISTENCE === "MONGO" ? new mongoToyDao() : new memoryToyDao();
-export const USERSDAO =
-  PERSISTENCE === "MONGO" ? new mongoUserDao() : new memoryUserDao();
+import productsLocal from "./memory/products.dao.js"
+import cartsLocal from "./memory/carrito.dao.js"
+
+
+import productsMongo from "./mongo/products.dao.js"
+import cartsMongo from "./mongo/carrito.dao.js"
+
+export const PRODUCTS_DAO = process.env.PERSISTENCE === "MONGO" ?    new productsLocal() : new productsMongo()
+export const CARTS_DAO = process.env.PERSISTENCE === "MONGO" ?    new cartsLocal() : new cartsMongo()
