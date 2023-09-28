@@ -2,6 +2,7 @@
 import express from "express";
 import { engine } from "express-handlebars";
 import mongoose from "mongoose";
+import path from "path";
 import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -31,13 +32,6 @@ const MONGO_URI = process.env.MONGO_URI
 
 //Conectar con mongo
 mongoose.connect(MONGO_URI)
-console.log("este es el dato", "", MONGO_URI)
-//Modo de trabajo
-const ENVIRONMENT = process.env.ENVIRONMENT
-
-const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_NAME = process.env.DB_NAME;
 
 //Cookie
 app.use(cookieParser("s3cr3tT"))
@@ -86,7 +80,7 @@ app.use("/api/sessions", SessionRoute);
 
 // Iniciar el servidor
 const server = app.listen(PORT, () => {
-  console.log("Listening on port " + PORT + " in " + ENVIRONMENT);
+  console.log("Listening on port " + PORT);
 });
 
 server.on("error", (err) => {

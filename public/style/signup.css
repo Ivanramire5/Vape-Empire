@@ -1,0 +1,38 @@
+
+.signupDiv{
+    display: grid;
+    place-items: center; 
+    padding: 20px;
+    padding-left: 40px;
+    column-gap: 100px;
+    row-gap: 10px;
+    margin-left: 530px;
+    margin-right: 530px;
+    border-style: solid;
+    border-color:#373331;
+    border-width: 2px;
+    background-color: #3DD2CC;
+    font-size: 1.2rem;
+}
+.tituloRegister{
+    text-align: center;
+    font-size: 1.8rem;
+    background-color: #3DD2CC;
+    color: #373331;
+    margin: 20px;
+    padding: 20px;
+    border-style: solid;
+    border-color: #CBF9DA;
+    border-width: 5px;
+}
+.divInferior{
+    display: grid;
+    place-items: center; 
+    padding: 20px;
+    padding-left: 40px;
+    column-gap: 100px;
+    row-gap: 10px;
+    margin-left: 530px;
+    margin-right: 530px;
+    font-size: 1.2rem;
+}

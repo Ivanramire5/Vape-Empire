@@ -2,10 +2,9 @@ import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local"
 import * as dotenv from "dotenv"
-import { UserModel } from "../dao/mongo/models/users.model.js";
+import  { UserModel }  from "../dao/mongo/models/users.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import crypto from "crypto"
-import  userService  from "../dao/mongo/models/users.model.js"
 import CartsModel from "../dao/mongo/models/carts.model.js";
 import jwt, { ExtractJwt } from "passport-jwt"
 
