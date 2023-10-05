@@ -2,12 +2,12 @@
 import { Router } from "express";
 
 
-const router = Router();
+const loginRouter = Router();
 
-router.get("/", (req, res) => {
+loginRouter.get("/", (req, res) => {
     res.render("login", {
         title: "Inicia sesion",
     });
 });
 
-export default router;
+export { loginRouter }

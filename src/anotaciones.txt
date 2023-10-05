@@ -138,6 +138,4 @@ function addToCart(id, product) {
       })
       .catch((err) => console.log(err, "no se agrego el producto "));
   }
-  const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_NAME = process.env.DB_NAME;
+ 

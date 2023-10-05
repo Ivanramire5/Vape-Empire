@@ -31,9 +31,9 @@ class ProductManager{
 
     async getProductos(){
         try{
-        let arrProductos = await fs.promises.readFile(this.path,"utf-8")
-        let productos = JSON.parse(arrProductos)
-        return productos
+          let arrProductos = await fs.promises.readFile(this.path,"utf-8")
+          let productos = JSON.parse(arrProductos)
+          return productos
         }catch(error){
             return error
         }
@@ -55,7 +55,7 @@ class ProductManager{
             let productos = JSON.parse(arrProductos)
             let productoIndice = productos.findIndex((product)=>product.id===id)
             if(productoIndice === -1){
-                return new Error("Producto no encontrado")
+              return new Error("Producto no encontrado")
             }else{
                 productos[productoIndice][campo] = dato
                 await fs.promises.writeFile(this.path,JSON.stringify(productos))

@@ -1,89 +1,89 @@
 
-import { PRODUCTS_DAO } from "../index.js"
+import { CARTS_MODEL } from "../mongo/models/carts.model.js"
+import { PRODUCTS_MODEL } from "../mongo/models/products.model.js"
 
-export default class CarritoDao{
-    constructor(){
-        this.carritos = []
+export class CarritoMemoryDao{
+
+    async getCartById(id){
+        return await CARTS_MODEL.findById(id).lean({})
     }
 
-    getCarts(){
-        return this.carritos
+    async saveCart(cart){
+        return await CARTS_MODEL.create(cart) 
     }
 
-    getCartById(id){
-        return this.carritos.find(c=>c.id == id)
-    }
-
-    saveCart(cart){
-        this.carritos.push(cart)
-        this.carritos.forEach(c=>{
-            c.id = this.carritos.indexOf(c)+1
-        })
-        return "Success"
-    }
-
-    saveProductCart(id,pid){
-        const carrito = this.carritos.find(c=> c.id == id)
-        const product = PRODUCTS_DAO.getProductById(pid)
-        if(carrito){
-            if(carrito.products.some(p=> p.id == product.id)){
-                const productoEnCarrito = carrito.products.find(p => p.id == product.id)
-                productoEnCarrito.quantity++
-            }else{
+    async saveProductCart(cid,pid){
+        let carrito = await CARTS_MODEL.findById(cid)
+        const productoEnCarrito = carrito.products.find(product => product.product.id === pid);
+        if (carrito) {
+            if (productoEnCarrito) {
+                const product = await PRODUCTS_MODEL.findById(pid)
+                product.quantity++
+                let result = await product.save()
+                return result
+            } else { 
+                const product = await PRODUCTS_MODEL.findById(pid)
                 product.quantity = 1
-                carrito.products.push(product)
+                let result = await product.save()
+                carrito.products.push({
+                    product: product.id,
+                });
             }
-            return "Success"
-        }else{
-            return "Cart not found"
+            const result = await carrito.save();
+            return result
+        } else {
+            return "Cart not found";
         }
     }
 
-    deleteProductCart(id,pid){
-        const carrito = this.carritos.find(c=>c.id == id)
-        if(carrito){
-            const indexProduct = carrito.products.findIndex(p=>p.id == pid)
-            if(indexProduct === -1) return "Product not found"
-            carrito.products.splice(indexProduct,1)
-            return "Success"
-        }else{
-            return "Cart not found"
-        }
+    async deleteProductCart(cid,pid){
+            const carrito = await CARTS_MODEL.findById(cid)
+            const indexProduct = carrito.products.findIndex(p=> p.product.id == pid)
+            if(indexProduct !== -1){
+                carrito.products.splice(indexProduct,1)
+                await carrito.save()
+                return carrito
+            }else{
+                return "Cart not found"
+            }
     }
 
-    updateCart(id,data){
-        const carrito = this.carritos.find(c=> c.id == id)
+    async updateCart(id,data){
+        const carrito = await CARTS_MODEL.findById(id)
         if(carrito){
             carrito.products = data
-            return "Success"
+            carrito.save()
+            return carrito
         }else{
             return "Cart not found"
         }
     }
 
-    updateQuantityProductsCart(cid,pid,cantidad){
-        const carrito = this.carritos.find(c => c.id == cid)
+    async updateQuantityProductsCart(cid,pid,quantity){
+        const carrito = await CARTS_MODEL.findById(cid)
+        const productoEnCarrito = carrito.products.findIndex(c => c.product.id === pid)
         if(carrito){
-            const productoEnCarrito = carrito.products.findIndex(p => p.id == pid)
             if(productoEnCarrito !== -1){
-                const product = carrito.products[productoEnCarrito]
-                product.quantity = cantidad
-                return "Success"
-            }else{ 
+                const product = await PRODUCTS_MODEL.findById(pid)
+                product.quantity = quantity
+                await product.save()
+                return carrito
+            }else{
                 return "Product not found"
             }
-        }else{ 
+        }else{
             return "Cart not found"
         }
     }
 
-    deleteProductsCart(cid){
-        const carrito = this.carritos.find(c => c.id == cid)
+    async deleteProductsCart(cid) {
+        const carrito = await CARTS_MODEL.findById(cid)
         if(carrito){
             carrito.products = []
-            return "Success"
+            await carrito.save()
+            return carrito
         }else{
-            return "Cart not found"
+        return "Cart not found"
         }
     }
 }

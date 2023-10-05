@@ -1,69 +1,14 @@
+
 import { Router } from "express";
-import ProductsModel from "../dao/mongo/models/products.model.js";
-import CartsModel from "../dao/mongo/models/carts.model.js";
+import { showProducts, showRealTimeProducts, showCart } from "../controller/views.controller.js"
+import { authAdmin } from "../utils";
 
-const router = Router()
+const viewsRouter = Router()
 
-router.get("/",(req,res)=>{
-    res.render("login", {title: "Inicie sesion"})
-})
-router.get("/signup",(req,res)=>{
-    res.render("signup", {title: "Registrar un usuario"})
-})
-router.get("/productos",async (req,res)=>{
-    const {limit = 10, page = 1, sort, query} = req.query
-    const {docs,hasPrevPage,hasNextPage,nextPage,prevPage} = await ProductsModel.paginate(query ? {category: query} : {},{limit, page, lean: true, sort: sort ? {price:1} : {price:-1}})
-    res.render("home",{Title: "Nuestros productos", 
-        products: docs,  
-        hasPrevPage,
-        hasNextPage,
-        prevPage,
-        nextPage,
-        limit,
-        sort,
-        query,
-    })
-})
+viewsRouter.get("/views", showProducts)
 
-router.get("/realTimeProducts",(req,res)=>{
-    res.render("realTimeProducts",{title: "Productos en tiempo real", script: "index.js"})
-})
+viewsRouter.get("/realTimeProducts", authAdmin, showRealTimeProducts)
 
-router.post("/agregarProducto",async(req,res)=>{
-    const {title,description,code,price,stock,category,thumbnail} = req.body
-    if(!title || !description || !code || !price || !stock || !category || !thumbnail){
-        return res.status(500).JSON({message : "Faltan datos"})
-    }else{
-        const productoNuevo = {
-            title : title,
-            description : description, 
-            code : code,
-            price : +price,
-            status : true,
-            stock : +stock,
-            category : category,
-            thumbnail : thumbnail
-        }
-        let result = await ProductsModel.insertMany([productoNuevo])
-        return res.status(201).JSON({message: "Producto agregado exitosamente", data : result})
-    }
-})
+viewsRouter.get("/carts/:cid", showCart)
 
-router.get("/carts/:cid",async(req,res)=>{
-    const { cid } = req.params;
-    try {
-        let carrito = await CartsModel.findOne({_id: cid }).lean()
-        if (carrito) {
-            let products = carrito.products;
-            console.log(products)
-            respuesta.render("carrito", { title: "Carrito", products: products });
-        } else {
-            respuesta.send("Carrito no encontrado");
-        }
-    } catch (err) { 
-        console.log(err); 
-        respuesta.send("Error al cargar el carrito");
-    }
-})
-
-export default router 
+export { viewsRouter }

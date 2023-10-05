@@ -1,96 +1,85 @@
 
 import { Router } from "express";
+import { isValidPassword } from "../utils.js";
 import passport from "passport";
-import { UserModel } from "../dao/mongo/models/users.model.js"
-import { createHash, isValidPassword } from "../utils.js"
+import { generateToken, passportCall, authorization } from "../utils.js";
+import { UsersRepository } from "../dao/repository/users.repository.js";
+import { USER_DAO } from "../dao/index.js";
 
-const router = Router();
+const userService = new UsersRepository(USER_DAO)
 
-function auth(req, res, next) {
-    if (req.session?.user && req.session?.admin) {
-        return next()
-    }
-    return res.status(401).json("Error de autenticacion");
-}
+//Iniciamos el router
+const SessionRoute = Router()
 
-router.post(
-    "/login",
-    passport.authenticate("login", {
-        failureRedirect: "/failLogin",
-    }),
-    async (req, res) => {
-        console.log(req.user);
-        if (!req.user) {
-            return res.status(401).json("error de autenticacion")
+//Formulario de registro
+SessionRoute.get("/signup", (req, res) => {
+    res.render("signup", {title: "Register", PORT: process.env.PORT})
+})
+
+//Vista del formulario de login
+SessionRoute.get("/",(req,res)=>{
+    res.render("login",{title: "Login", PORT: process.env.PORT})
+})
+
+//Registro with passport
+SessionRoute.post("/register",passport.authenticate("register",{
+    failureRedirect: "/failRegister"}),async(req,res) => {
+        res.json({status: "success", message: "Usuario registrado"})
+})
+
+//Por si falla el registro
+SessionRoute.get("/failRegister",(req,res) => {
+    res.send({error:"Error register"})
+})
+
+//JWT
+SessionRoute.post("/signup",async(req,res) => {
+    const {email,password} = req.body
+    const user = await userService.getUserByEmail(email)
+    if(!user){
+        return res.json({status: "error", message: "User not found"})
+    }else{
+        if(!isValidPassword(password,user.password)){
+            return res.json({status: "error", message: "Invalid password"})
+        }else{
+            const myToken = generateToken(user)
+            res.cookie("coderCookieToken",myToken,{ 
+               maxAge: 60 * 60 * 1000,
+                httpOnly: true
+            })
+            res.json({status: "success"})  
         }
-        req.session.user = {
-            first_name: req.user.first_name,
-            last_name: req.user.last_name,
-            email: req.user.email,
-            age: req.user.age,
-        };
-        req.session.admin = true;
-        res.send({ status: "success", mesage: "user logged", user: req.user });
     }
-);
+})
+SessionRoute.get("/current",passportCall("jwt"),authorization("user"),(req,res)=>{
+    res.send({fullname: req.user.user.fullname, age: req.user.user.age, role: req.user.user.role}) 
+})
 
-router.get("/failLogin", async (req, res) => {
-    console.log("Failed login");
-    res.send({ error: "failed" });
-});
+//Por si falla el login
+SessionRoute.get("/failLogin",(req,res) => {
+    res.send({error: "Error login"})
+})
 
-router.post("/forgot", async (req, res) => {
-    const { username, newPassword } = req.body;
+//Cerrar sesion
+SessionRoute.get("/logout",(req,res) => {
+    req.session.destroy(err => {
+        if(!err){
+            return res.json({
+                message: "Sesión cerrada"
+            })
+            }else {
+                return res.json({
+                message: "Error al cerrar sesión"
+            }) 
+        }
+    })
+})
 
-    const result = await UserModel.find({
-        email: username,
-    });
-    if(result.length === 0)
-    return res.status(401).json({
-        respuesta: "El usuario no existe",
-    });
-    else {
-        const respuesta = await UserModel.findByIdAndUpdate(result[0]._id, {
-            password: createHash(newPassword),
-        });
-        console.log(respuesta);
-        res.status(200).json({
-            respuesta: "Se cambió la contraseña",
-            datos: respuesta,
-        });
-    }
-});
+//Github
+SessionRoute.get("/api/sessions/github",passport.authenticate("github", {scope:["user:email"]}) ,async(req,res) => {})
 
-router.get("/privado", auth, (req, res) => {
-    res.render("topsecret", {});
-});
+SessionRoute.get("/api/sessions/githubcallback", passport.authenticate("github", {failureRedirect: "/", session: false}),async(req,res)=>{
+    res.redirect("/views")
+})
 
-router.post(
-    "/signup",
-    passport.authenticate("register", {
-        failureRedirect: "/failRegister",
-    }),
-    async (req, res) => {
-        res.send({ status: "success", mesage: "user registered" });
-    }
-);
-router.get(
-    "/github",
-    passport.authenticate("github", { scope: ["user:email"] }),
-    async (req, res) => {}
-);
-router.get(
-    "/githubcallback",
-    passport.authenticate("github", { failureRedirect: "/login" }),
-    async (req, res) => {
-        req.session.user = req.user;
-        req.session.admin = true;
-        res.redirect("/");
-    }
-  );
-router.get("/failRegister", async (req, res) => {
-    console.log("failed strategy");
-    res.send({ error: "failed" });
-});
-
-export default router
+export { SessionRoute }

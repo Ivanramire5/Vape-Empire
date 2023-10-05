@@ -1,10 +1,9 @@
-import MessagesModel from "../dao/mongo/models/messages.model.js";
+
 import { Router } from "express";
+import { getMessages } from "../controller/chat.controller.js"
 
-const router = Router()
+const ChatRoute = Router()
 
-router.get("/",(req,send)=>{
-    send.render("chat",{title:"Chat"})
-})
+ChatRoute.get("/", getMessages)
 
-export default router
+export { ChatRoute }

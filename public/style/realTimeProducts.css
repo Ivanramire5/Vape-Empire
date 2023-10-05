@@ -59,7 +59,7 @@ body {
     transform: scale(0.9);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-#productForm{
+.productForm{
     text-align: center;
     display: grid;
     color: #373331;

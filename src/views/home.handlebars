@@ -1,6 +1,11 @@
 {{log products}}
 <div>
-    <h1>{{Title}}</h1>
+    <h1>Nuestros productos</h1>
+    <a href="" id="cerrarSesion">Cerrar Sesion</a>
+    <p>Bienvenido {{fullname}}</p>
+    <p>Mail: {{email}}</p>
+    <p>Rol: {{rol}}</p>
+    <a href="http://localhost:{{PORT}}/views/carts/{{idCart}}" id="id-carrito"><span class="material-symbols-outlined">
     <ul>
         {{#each products}}
         <li>

@@ -9,4 +9,4 @@ function configuration(){
     dotenv.config({path: m === "PRODUCTION" ? "./.env.sq" : "./.env"})
 }
 
-export {configuration} 
+export { configuration } 

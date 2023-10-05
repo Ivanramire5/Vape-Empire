@@ -1,12 +1,14 @@
 
 let form = document.getElementById("loginForm");
-console.log(form);
-form.addEventListener("submit", async (e) => {
+
+const loc = window.location.href.split(":")
+
+form.addEventListener("submit", (e) => {
     e.preventDefault();
     let mail = document.getElementById("mail").value;
     let password = document.getElementById("password").value;
     console.log(mail, password);
-    await loguearse(mail, password);
+    loguearse(mail, password);
 });
 
 const loguearse = async (mail, password) => {
@@ -26,7 +28,7 @@ const loguearse = async (mail, password) => {
             "success"
         )
         setTimeout(() => {
-            window.location.href = "http://localhost:3000/views";
+            window.location.href =  loc[0]+":"+loc[1]+":"+loc[2].split("/")[0]+"/views";
         }, 2000);
     } else {
         Swal.fire(

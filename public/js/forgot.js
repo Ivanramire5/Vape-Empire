@@ -1,5 +1,5 @@
 async function postForgot(username, newPassword) {
-    const response = await fetch("/api/session/forgot", {
+    const response = await fetch("/session/forgot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
