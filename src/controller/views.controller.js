@@ -65,7 +65,7 @@ async function showCart(req,res){
                 if(productos.length === 0){
                     res.send("El carrito está vacio")
                 }else{
-                    res.render("carrito", { title: "Carrito", productos, script: "carrito.js", style: "carrito.css", MONGO: process.env.PERSISTENCE === "MONGO", purchaser: req.user.user.email, idC: req.user.user.cart}); 
+                    res.render("realTimeProducts", { title: "Carrito", productos, MONGO: process.env.PERSISTENCE === "MONGO", purchaser: req.user.user.email, idC: req.user.user.cart}); 
                 }
             } else {
                 res.send("Carrito no encontrado");

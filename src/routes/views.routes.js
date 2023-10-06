@@ -5,7 +5,7 @@ import { authAdmin } from "../utils";
 
 const viewsRouter = Router()
 
-viewsRouter.get("/views", showProducts)
+viewsRouter.get("/", showProducts)
 
 viewsRouter.get("/realTimeProducts", authAdmin, showRealTimeProducts)
 
