@@ -1,55 +1,55 @@
 // Importa los módulos necesarios
 import express from "express";
 import { engine } from "express-handlebars";
-import { Server } from "socket.io";
 import mongoose from "mongoose";
-import path from "path";
+import { resolve } from "path"
+import { Server } from "socket.io"
+import { createServer } from "http";
 import passport from "passport";
+import __dirname, { createRoles } from "./utils.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
-import { configuration } from "./config.js"
-import { __dirname, authToken } from "./utils.js"
-import { initializePassport}  from "./config/passport.config.js";
+import * as dotenv from "dotenv"
+import compression from "express-compression"
+import MongoSingleton from "./memory/services/MongoSingleton.js"
+import  initializePassport  from "./config/passport.config.js";
+import Message from "./dao/mongo/models/chat.models.js"
+//Importamos las rutas
+import CarritoRoute from "./routes/carts.routes.js"
+import ProductsRoute from "./routes/products.routes.js"
+import SessionRoute from "./routes/session.routes.js"
 
-//importaciones de dao
-import { ProductsRepository } from "./dao/repository/products.repository.js"
-import { PRODUCTS_DAO } from "./dao/index.js"
-import { ChatRepository } from "./dao/repository/chat.repository.js"
-import { MESSAGES_DAO } from "./dao/index.js"
-import { PRODUCTS_MODEL } from "./dao/mongo/models/products.model.js"
-
-//importaciones de rutas
-import { ProductsRoute } from "./routes/products.routes.js";
-import { CarritoRoute } from "./routes/carts.routes.js";
-import { ChatRoute } from "./routes/chat.routes.js";
-import { SessionRoute }  from "./routes/session.routes.js";
 
 
 //Dotenv
-configuration()
+dotenv.config();
+//configuration()
 
-//Inicializar express
+//Iniciamos la app
 const app = express()
+createRoles()
+const httpserver = createServer(app)
+
+//Definimos el puerto
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
 
-// RUTAS
-app.use("/products", ProductsRoute);
-app.use("/carts", CarritoRoute);
-app.use("/chat", ChatRoute, authToken);
-app.use("/", SessionRoute);
-
+//Listen to server 
+const httpServer = app.listen(PORT, () => {
+  console.log(`Server on port ${PORT}`)
+})
 //Variables de entorno
-const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_NAME = process.env.DB_NAME;
+// const DB_USER = process.env.DB_USER;
+// const DB_PASS = process.env.DB_PASS;
+// const DB_NAME = process.env.DB_NAME;
 
+//Abrimos el servidor
+httpServer.on("error", (err) => console.log(err));
 //Conectar con mongo
 mongoose.connect(MONGO_URI)
 
 //Cookie
-app.use(cookieParser("s3cr3tT"))
 
 //Sesión con mongo
 app.use(session({
@@ -67,6 +67,7 @@ app.use(session({
 }))
 
 //Passport
+mongoose.set("strictQuery", false)
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session()) 
@@ -77,78 +78,80 @@ app.use(express.urlencoded({extended : true}))
 
 
 //Configuración del handlebars
-app.engine('handlebars', engine());
+const viewsPath = resolve('src/views');
+app.engine('handlebars', engine({
+  layoutsDir: `${viewsPath}/layouts`,
+  defaultLayout: `${viewsPath}/layouts/main.handlebars`,
+}));
+
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, "./views"));
+app.set('views', viewsPath);
+
+// Controlador para la ruta raíz
+app.get('/', function(req, res){
+  res.render('login');
+});
+
+// RUTAS
+app.use("/products", ProductsRoute);
+app.use("/carts", CarritoRoute);
+app.use("/", SessionRoute);
+
 
 
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))
 
+//Usamos compresion
+app.use(compression())
+
+//Iniciamos el servidor
 
 
-// Iniciar el servidor
-const server = app.listen(PORT, () => {
-  console.log("Listening on port " + PORT);
-});
+const io = new Server(httpServer);
+let messages = [];
+// Configurar el evento de conexión de Socket.IO
+io.on("connection", (socket) => {
+  //console.log("Nuevo cliente conectado!");
 
-server.on("error", (err) => {
-  console.log(err);
-});
+  socket.on("chat message", async (msg) => {
+    // Crea un nuevo mensaje y guárdalo en la base de datos
+    const message = new Message({ content: msg });
+    await message.save();
+  });
 
-//ioServer
-const ioServer = new Server(server);
+  socket.on("message", (data) => {
+    messages.push(data);
+    io.emit("messageLogs", messages);
+  });
 
-//usamos lo de dao
-const productsService = new ProductsRepository(PRODUCTS_DAO)
-const chatService = new ChatRepository(MESSAGES_DAO)
-
-//Conexion con el servidor
-ioServer.on("connection", async (socket) => {
-  console.log("Nueva conexión establecida");
-  
-  //Desconeccion con el server
+  // Escuchar evento 'agregarProducto' y emitir 'nuevoProductoAgregado'
+  socket.on("agregarProducto", async (newProduct) => {
+    //console.log("Nuevo producto recibido backend:", newProduct);
+    const product = new productModel(newProduct);
+    const productSave = await product.save();
+    console.log(productSave);
+    // Agregar el nuevo producto a la lista de productos
+    io.emit("nuevoProductoAgregado", newProduct);
+  });
   socket.on("disconnect", () => {
-    console.log("Usuario desconectado");
-  });
-
-  //Agregamos un producto y los mostramos
-  socket.on("new-product", async (data) => {
-    const newProduct = await productsService.saveProducts(data)
-    const productos = process.env.PORT === "8080" ? await PRODUCTS_MODEL.find({}).lean({}) : await productsService.getProducts()
-    socket.emit("update-products", productos)
-  });
-
-  //Eliminamos un producto
-  socket.on("delete-product", async (data) => {
-    let id = data;
-    let result = await ProductsModel.findByIdAndDelete(id);
-    console.log("Producto eliminado", result);
-    const productos = process.env.PORT === "8080" ? await PRODUCTS_MODEL.find({}).lean({}) : await productsService.getProducts()
-    socket.emit("update-products", productos)
-  });
-
-  //Mostramos los productos
-  const productos = process.env.PORT === "8080" ? await PRODUCTS_MODEL.find({}).lean({}) : await productsService.getProducts()
-  socket.emit("update-products", productos)
-  
-  //Creamos un mensaje
-  socket.on("guardar-mensaje", async (data) => {
-    await chatService.createMessage(data)
-    const mensajes = await chatService.getMessages()
-    socket.emit("enviar-mensajes", mensajes)
-  });
-
-//Mostramos un mensaje 
-  const mensajes = await chatService.getMessages()
-  socket.emit("enviar-mensajes", mensajes);
-
-  //Recibimos la cantidad de mensajes
-  socket.on("Nuevos-mensajes", async (data) => {
-    
-    //Mosramos mensajes
-    const mensajes = await chatService.getMessages()
-    socket.emit("enviar-mensajes", mensajes)
+    //console.log("Cliente desconectado");
   });
 });
 
+// Conexión a la base de datos
+
+let dbConnect = mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.set("strictQuery", true);
+
+dbConnect.then(
+  () => {
+    console.log("Conexión a la base de datos exitosa");
+  },
+  (error) => {
+    console.log("Error en la conexión a la base de datos", error);
+  }
+);

@@ -1,25 +1,22 @@
-
 import mongoose from "mongoose";
+import Role from "./role.model.js";
 
-const userCollection = "users"
+const userCollection = "users";
 
 const userSchema = new mongoose.Schema({
-    fullname: String,
-    email: {
-        type: String,
-        require: true
+  username: { type: String, required: true, max: 100 },
+  email: { type: String, required: true, max: 100, unique: true },
+  password: { type: String, required: true, max: 100 },
+  age: { type: Number, required: true, max: 100 },
+  roles: [
+    {
+      ref: "Role",
+      type: mongoose.Schema.Types.ObjectId,
     },
-    age: Number,
-    password: {
-        type: String,
-        require: true
-    },
-    cart: mongoose.Schema.Types.ObjectId,
-    role: {
-        type: String,
-        default: "user"
-    }
-})
+  ],
+  timestamp: { type: Date, default: Date.now },
+});
 
-export const USER_MODEL = mongoose.model(userCollection,userSchema)
+const userModel = mongoose.model(userCollection, userSchema);
 
+export default userModel;

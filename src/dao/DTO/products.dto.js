@@ -1,6 +1,6 @@
 
-export class ProductsDTO{
-    constructor(product){  
+export class ProductsDTO {
+    constructor(product) {  
         this.title = product.title.toUpperCase(),
         this.description = product.description
         this.code = "#"+product.code

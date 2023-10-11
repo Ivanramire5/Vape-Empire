@@ -1,31 +1,50 @@
 
-//Importamos el modulo
-import { UsersDto } from "../DTO/users.dto.js"
+import UsersDto from "../DTO/users.dto.js"
+import UserMongooseDao from "../mongo/users.dao.js"
+import { isValidPassword } from "../../utils.js"
 
-//Definimos una clase y usamos un constructor para interactuar con una base de datos
-export class UsersRepository {
-    constructor(dao) {
-        this.dao = dao
+
+class UserRepository {
+    constructor() {
+        this.userDao = new UserMongooseDao()
     }
 
-    async getUsers() {
-        return await this.dao.getUsers()
-    } //Recupera todos los usuarios de la base de datos
-
-    async getUserByEmail(email) {
-        return await this.dao.getUserByEmail(email)
-    } //Busca un usuario mediante su direccion de email
-
+    // Creacion del usuario
     async createUser(user) {
-        const userDto = new UsersDto(user)
-        return await this.dao.createUser(userDto)
-    } //Crea un usuario
+        const exist = await this.userDao.getUser(user.email)
+        if (exist) return { status: 'error', error: 'User already exist' }
 
-    async deleteUser(id) {
-        return await this.dao.deleteUser(id)
-    } //Elimina un usuario
+        const newUser = new UsersDto(user)
+        const userFinally = await this.userDao.createUser(newUser)
+        return userFinally
+    }
 
-    async getUserById(id) {
-        return await this.dao.getUserById(id)
-    } //Recupera un usuario usando su id
+    // Verifico si el usuario existe
+    async getUser(email, password) {
+        const emailExist = await this.userDao.getUser(email)
+
+        if (!emailExist) {
+            return { status: 500, message: 'Usuario incorrecto o inexistente.' }
+        } else {
+            if (!isValidPassword(emailExist, password)) {
+                return { status: 500, message: 'Contraseña incorrecta.' }
+            } else {
+                return emailExist
+            }
+        }
+    }
+
+    // Ruta current
+    async getCurrentUser(user) {
+        const exist = await this.userDao.getUser(user.email)
+
+        if (!exist) {
+            return { status: 500, message: 'Usuario sin permisos.' }
+        } else {
+            const newUser = new UsersDto(user)
+            return { status: 200, message: "Bienvenido " + newUser.full_name }
+        }
+    }
 }
+
+export default UserRepository

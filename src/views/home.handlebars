@@ -5,33 +5,28 @@
     <p>Bienvenido {{fullname}}</p>
     <p>Mail: {{email}}</p>
     <p>Rol: {{rol}}</p>
-    <a href="http://localhost:{{PORT}}/views/carts/{{idCart}}" id="id-carrito"><span class="material-symbols-outlined">
-    <ul>
-        {{#each products}}
-        <li>
-            <div class="datos">
-                <h2>{{title}}</h2>
-                <div class="descripcion-productos">
-                    <p>Description: {{this.description}}</p>
-                    <p>Category: {{this.category}}</p>
-                </div>
-                <div class="precios-products">
-                    <p>Price: {{this.price}}</p>
-                    <p>Stock: {{this.stock}}</p>
-                </div>
-                <div id="addToCart">
-                    <button class="boton">Agregar al carrito</button>
-                </div>
+    {{#each products}}
+        <div class="datos">
+            <h2>{{title}}</h2>
+            <div class="descripcion-productos">
+                <p>Description: {{this.description}}</p>
+                <p>Category: {{this.category}}</p>
             </div>
-            <img src={{this.thumbnail}}>
-        </li>
-        {{/each}}
-        {{#if hasPrevPage}}
-            <a href="/?limit={{limit}}&page={{prevPage}}&sort={{sort}}&query={{query}}"><button class="btn btn-danger">Anterior</button></a>
-        {{/if}}
-        {{#if hasNextPage}}
-        <a href="/?limit={{limit}}&page={{nextPage}}&sort={{sort}}&query={{query}}"><button class="btn btn-danger">Siguiente</button></a>
-        {{/if}}
-    </ul>
+            <div class="precios-products">
+                <h5>Price USD: {{this.price}}</h5>
+                <p>Stock: {{this.stock}}</p>
+            </div>
+            <div id="addToCart">
+                <button class="boton">Agregar al carrito</button>
+            </div>
+        </div>
+        <img src={{this.thumbnail}}>
+    {{/each}}
+    {{#if hasPrevPage}}
+        <a href="/?limit={{limit}}&page={{prevPage}}&sort={{sort}}&query={{query}}"><button class="btn btn-danger">Anterior</button></a>
+    {{/if}}
+    {{#if hasNextPage}}
+    <a href="/?limit={{limit}}&page={{nextPage}}&sort={{sort}}&query={{query}}"><button class="btn btn-danger">Siguiente</button></a>
+    {{/if}}
 </div>
 <script src="/js/products.js"></script>

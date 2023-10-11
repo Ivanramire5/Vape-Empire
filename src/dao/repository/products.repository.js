@@ -1,37 +1,57 @@
 
-//Importamos los datos de productos
-import { ProductsDTO } from "../DTO/products.dto.js"
+import ProductMongooseDao from "../mongo/products.dao.js"
 
-//Importalos ProductsDTO para transmitir datos
-export class ProductsRepository {
-    constructor(dao) {
-        this.dao = dao
+class ProductRepository {
+    constructor() {
+        this.productDao = new ProductMongooseDao()
     }
 
-    async getProducts(req, res) {
-        return await this.dao.getProducts(req, res)
-    } //Obtenemos los productos
+    async getProducts(limit, sort, category, page) {
+        let aggregationStages = []
+        
+        let pagination = {
+            limit: limit,
+            category: category,
+            page: page ? page : 1
+        }
 
-    async getProductsById(id) {
-        return await this.dao.getProductsById(id)
-    } //Obtenemos el id de cada producto
+        if (category) {
+            aggregationStages.push({ $match: { category } })
+        }
 
-    async saveProduct(product) {
-        const productDto = new ProductsDTO(product)
-        return await this.dao.saveProduct(productDto)
-    } //Guardamos los nuevos productos
+        if (limit) {
+            aggregationStages.push({ $limit: limit })
+        } else {
+            aggregationStages.push({ $limit: 10 })
+        }
 
-    async modifyProduct(pid, product) {
-        const productDto = new ProductsDTO(product)
-        productDto._id = !isNaN(pid) ? +pid : pid
-        return await this.dao.modifyProduct(pid, productDto)
-    } //Modificamos los productos ya existentes
+        if (sort === 'asc') {
+            aggregationStages.push({ $sort: { price: 1 } })
+        }
 
-    async deleteProduct(pid) {
-        return await this.dao.deleteProduct(pid)
-    } //Borramos un producto
+        if (sort === 'desc') {
+            aggregationStages.push({ $sort: { price: -1 } })
+        }
 
-    async modifyStockProduct(pid) {
-        return await this.dao.modifyProduct(pid)
-    } //Modificamos el stock de ciertos productos
+        return this.productDao.getProducts(aggregationStages, pagination)
+    }
+
+    async createProduct(data) {
+        return this.productDao.createProduct(data)
+    }
+
+    async getProductById(id) {
+        return this.productDao.getProductById(id)
+    }
+
+    async updateProduct(id, data) {
+        return this.productDao.updateProduct(id, data)
+    }
+
+    async deleteProduct(id) {
+        return this.productDao.deleteProduct(id)
+    }
 }
+
+
+export default ProductRepository

@@ -12,7 +12,7 @@ form.addEventListener("submit", (e) => {
 });
 
 const loguearse = async (mail, password) => {
-    const response = await fetch("/login", {
+    const response = await fetch("/products", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

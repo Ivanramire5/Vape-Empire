@@ -1,25 +1,43 @@
 
 import { Router } from "express";
-import { getProducts, getProductById, saveProduct, modifyProduct, deleteProduct, modifyStockProduct } from "../controller/products.controller.js"
+import productManager from "../memory/products.controller.js";
+import { verifyToken, isAdmin } from "../middlewares/authJWT.js";
 
 const ProductsRoute = Router()
+const Manager = new productManager()
 
-//Tomamos los productos
-ProductsRoute.get("/", getProducts)
+ProductsRoute.get("/:code", async (req, res) => {
+    const code = req.params.code;
+    const product = await Manager.getProductByCode(code);
+    res.json(product);
+});
+  //getProducts
+ProductsRoute.get("/", async (req, res) => {
+    const products = await Manager.getProducts();
+    res.json(products);
+});
+  //addProduct
+ProductsRoute.post(
+    "/addnewProduct",
+    [verifyToken, isAdmin],
+    async (req, res) => {
+        const product = req.body;
+        const newProduct = await Manager.addProduct(product);
+        res.json(newProduct);
+    }
+);
+  // updateProductByCode
+ProductsRoute.put("/:code", [verifyToken, isAdmin], async (req, res) => {
+    const code = req.params.code;
+    const modified = req.body;
+    const product = await Manager.updateProductByCode(code, modified);
+    res.json(product);
+});
+  //deleteProduct
+ProductsRoute.delete("/:code", [verifyToken, isAdmin], async (req, res) => {
+    const code = req.params.code;
+    const product = await Manager.deleteProduct(code);
+    res.json(product);
+});
 
-//Tomamos un producto individual usando el id
-ProductsRoute.get("/:pid", getProductById)
-
-//Agregamos un producto y lo guardamos
-ProductsRoute.post("/", saveProduct)
-
-//Modificamos un producto
-ProductsRoute.put("/:pid", modifyProduct)
-
-//Borramos un producto
-ProductsRoute.delete("/:pid", deleteProduct)
-
-//Modificamos el stock de un producto
-ProductsRoute.put("/stock/:pid", modifyStockProduct)
-
-export {ProductsRoute}
+export default ProductsRoute

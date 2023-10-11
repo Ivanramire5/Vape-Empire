@@ -1,95 +1,43 @@
 
-import { CARTS_MODEL } from "./models/carts.model.js"
-import { PRODUCTS_MODEL } from "./models/products.model.js"
+import cartSchema from "./models/carts.model.js"
 
-export class CarritoMongoDao {
+export class CartMongooseDao {
 
+    //Creamos el carrito
+    async createCart() {
+        return await cartSchema.create({ products: [] })
+    }
+
+    //Obtenemos el carrito
     async getCartById(id) {
-        return await CARTS_MODEL.findById(id).lean({})
+        const cart = await cartSchema.findOne({ _id: id})
+        return cart
     }
 
-    async saveCart(cart) {
-        return await CARTS_MODEL.create(cart)
+    //Eliminamos el carrito
+    async deleteCart(id) {
+        return await cartSchema.deleteOne({ _id: id})
     }
 
-    async saveProductCart(id,pid) {
-        let carrito = await CARTS_MODEL.findById(cid)
-        const productoEnCarrito = carrito.products.find(product => product.product.id === pid);
-        if (carrito) {
-            if (productoEnCarrito) {
-                const product = await PRODUCTS_MODEL.findById(pid)
-                product.quantity++
-                let result = await product.save()
-                return result
-            } else { 
-                const product = await PRODUCTS_MODEL.findById(pid)
-                product.quantity = 1
-                let result = await product.save()
-                carrito.products.push({
-                    product: product.id,
-                });
-            }
-            const result = await carrito.save();
-            return result
-        } else {
-            return "Cart not found";
-        }
+    //Añadimos un producto al carrito
+    async addProductInCart(cartId, cart) {
+        return await cartSchema.updateOne({ _id: cartId }, cart)
     }
 
-    async deleteProductCart(cid,pid) {
-            const carrito = await CARTS_MODEL.findById(cid)
-            const indexProduct = carrito.products.findIndex(p=> p.product.id == pid)
-            if(indexProduct !== -1){
-                carrito.products.splice(indexProduct,1)
-                await carrito.save()
-                return carrito
-            }else{
-                return "Cart not found"
-            }
+    //Eliminamos un producto en un carrito
+    async  deleteProductInCart(cartId, newCart) {
+        return await cartSchema.findOneAndUpdate({ _id: cartId }, newCart)
     }
 
-    async updateCart(id,data) {
-        try{
-            const carrito = await CARTS_MODEL.findById(id)
-            if(carrito) {
-                carrito.products = data
-                carrito.save()
-                return "Success"
-            }else {
-                return "Cart not found"
-            }
-        }catch(err) {
-            console.log(err)
-        }
+    //Actualizamos todo el carrito
+    async updateCart(cartId, updateCart) {
+        return await cartSchema.updateOne({ _id: cartId }, updateCart)
     }
 
-    async updateQuantityProductsCart(cid,pid,cantidad) {
-        const carrito = await CARTS_MODEL.findById(cid)
-        const productoEnCarrito = carrito.products.findIndex(c => c.product.id === pid)
-        if(carrito) {
-            if(productoEnCarrito !== -1){
-                const product = await PRODUCTS_MODEL.findById(pid)
-                product.quantity = quantity
-                await product.save()
-                return carrito
-            }else {
-                return "Product not found"
-            }
-        }else {
-            return "Cart not found"
-        }
-    }
-
-    async deleteProductsCart(cid){
-        const carrito = await CARTS_MODEL.findById(cid)
-        if(carrito) {
-            carrito.products = []
-            await carrito.save()
-            return "Success"
-        }else {
-                return "Cart not found"
-        }
-    }catch(err) {
-        console.log(err)
+    //actualizamos la cantidad de un producto dentro del carrito
+    async updateQuantity(cartId, cart) {
+        return await cartSchema.findOneAndUpdate({ _id: cartId }, cart)
     }
 }
+
+export default CartMongooseDao
