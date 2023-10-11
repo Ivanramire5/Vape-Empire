@@ -2,6 +2,8 @@
 import express from "express";
 import mongoose from "mongoose"
 import cookieParser from "cookie-parser";
+import { engine } from 'express-handlebars';
+import { createRequire } from 'module';
 import session from "express-session"
 import passport from 'passport';
 import path from 'path';
@@ -24,8 +26,9 @@ const MONGO_URI = process.env.MONGO_URI
 //configuration()
 
 //Iniciamos la app
-const { engine } = require('express-handlebars');
+
 const app = express()
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -97,11 +100,12 @@ app.use("/", SessionRoute);
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))
 
-// //Usamos compresion
-// app.use(compression())
+
 
 // //Iniciamos el servidor
-
+app.listen(PORT, () => {
+  console.log(`Server connected in port ${PORT}`)
+})
 
 // const io = new Server(httpServer);
 // let messages = [];
@@ -142,11 +146,3 @@ app.use(express.static("public"))
 // });
 // mongoose.set("strictQuery", true);
 
-dbConnect.then(
-  () => {
-    console.log("Conexión a la base de datos exitosa");
-  },
-  (error) => {
-    console.log("Error en la conexión a la base de datos", error);
-  }
-);
