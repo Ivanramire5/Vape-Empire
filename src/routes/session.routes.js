@@ -6,6 +6,9 @@ import { authToken, createHash, generateToken, isValidPassword, passportCall } f
 
 const SessionRoute = Router()
 
+SessionRoute.get("/signup", (req, res) => {
+    res.render("signup")
+})
 // Registro con jwt
 SessionRoute.post('/register', async  (req, res) => {
     const { first_name, last_name, email, password, age } = req.body
