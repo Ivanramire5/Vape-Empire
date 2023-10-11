@@ -1,6 +1,6 @@
 
-import UsersDto from "../DTO/users.dto.js"
-import UserMongooseDao from "../mongo/users.dao.js"
+import UserDTO from "../DTO/users.dto.js"
+import UserMongooseDao from "../../dao/mongo/UserMongooseDao.js"
 import { isValidPassword } from "../../utils.js"
 
 
@@ -14,7 +14,7 @@ class UserRepository {
         const exist = await this.userDao.getUser(user.email)
         if (exist) return { status: 'error', error: 'User already exist' }
 
-        const newUser = new UsersDto(user)
+        const newUser = new UserDTO(user)
         const userFinally = await this.userDao.createUser(newUser)
         return userFinally
     }
@@ -41,7 +41,7 @@ class UserRepository {
         if (!exist) {
             return { status: 500, message: 'Usuario sin permisos.' }
         } else {
-            const newUser = new UsersDto(user)
+            const newUser = new UserDTO(user)
             return { status: 200, message: "Bienvenido " + newUser.full_name }
         }
     }

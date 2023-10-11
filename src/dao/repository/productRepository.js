@@ -1,5 +1,4 @@
-
-import ProductMongooseDao from "../mongo/products.dao.js"
+import ProductMongooseDao from "../../dao/mongo/ProductMongooseDao.js"
 
 class ProductRepository {
     constructor() {

@@ -1,5 +1,5 @@
-import CartMongooseDao from "../mongo/carrito.dao.js"
-import ProductMongooseDao from "../mongo/products.dao.js"
+import CartMongooseDao from "../../dao/mongo/CartMongooseDao.js"
+import ProductMongooseDao from "../../dao/mongo/ProductMongooseDao.js"
 
 
 class CartRepository {
@@ -85,4 +85,3 @@ class CartRepository {
 }
 
 export default CartRepository
-

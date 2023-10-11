@@ -1,15 +1,13 @@
-import mongoose from "mongoose"
-
-import userSchema from "../mongo/models/users.model.js"
+import userSchema from "./models/userSchema.js"
 
 class UserMongooseDao {
 
-    //Creamos el usuario
+    // Crear user
     async createUser(user) {
         return await userSchema.create(user)
     }
 
-    //Buscamos el usuario
+    // Buscar user
     async getUser(email) {
         return await userSchema.findOne({ email: email })
     }
