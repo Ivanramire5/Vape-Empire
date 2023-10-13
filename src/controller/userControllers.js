@@ -15,7 +15,7 @@ export const createUser = async (req, res) => {
             role
         }
 
-        if(user.email === "agustinsanchez@gmail.com"){
+        if(user.email === "ivan.r4amire5@gmail.com"){
             user.role = "admin"
         }else{
             user.role = "user"
@@ -29,12 +29,10 @@ export const createUser = async (req, res) => {
             maxAge: 60 * 60 * 1000,
             httpOnly: true
         }).send({"result": result, "jwt": access_token})
-   
 
     } catch (error) {
         console.log('Error in createUser' + error)
     }
-
 }
 
 // Vista del login

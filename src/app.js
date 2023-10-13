@@ -10,13 +10,11 @@ import path from 'path';
 import * as dotenv from "dotenv"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from 'connect-mongo'
-//Importamos las rutas
 
+//Importamos las rutas
 import CarritoRoute from "./routes/carts.routes.js"
 import ProductsRoute from "./routes/products.routes.js"
 import SessionRoute from "./routes/session.routes.js"
-
-
 
 //Dotenv
 dotenv.config();
@@ -26,13 +24,10 @@ const MONGO_URI = process.env.MONGO_URI
 //configuration()
 
 //Iniciamos la app
-
 const app = express()
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//Sesión con mongo
 //session con mongo
 app.use(
   session({
@@ -70,10 +65,6 @@ try {
 
 //Conectar con mongo
 
-
-//Cookie
-
-
 //Configuración del handlebars
 
 const viewsPath = path.resolve('src/views');
@@ -85,22 +76,14 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', viewsPath);
 
-// Controlador para la ruta raíz
-app.get('/', function(req, res){
-  res.render('login');
-});
 
 // RUTAS
 app.use("/products", ProductsRoute);
 app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);
 
-
-
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))
-
-
 
 // //Iniciamos el servidor
 app.listen(PORT, () => {
