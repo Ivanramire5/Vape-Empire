@@ -1,10 +1,33 @@
 import ProductRepository from "../dao/mongo/ProductMongooseDao.js"
+import CustomError from "../services/errors/CustomErrors.js"
+import EErrors from "../services/errors/enums.js"
+import { generateProductErrorInfo } from "../services/errors/info.js"
+
 
 // Crear products
 export const createProduct = async (req, res) => {
     try {
+        const { title, description, code, price, status, stock, thumbnail } = req.body
+        const product = {
+            title,
+            description,
+            code,
+            price,
+            status,
+            thumbnail
+        }
+        if (!title || !description || !code) {
+            CustomError.createError({
+                name: "User error",
+                cause: generateProductErrorInfo({ title, description, code }),
+                message: "Error para crear el usuario",
+                code: EErrors.INVALID_TYPES_ERROR
+            })
+        }
+
         const manager = new ProductRepository()
         const products = await manager.createProduct(req.body)
+
         res.send({ status: 'sucess', products, message: 'Product created.' })
     } catch (error) {
         console.log('Erorr in created products' + error)

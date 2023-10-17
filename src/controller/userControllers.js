@@ -1,5 +1,8 @@
 import UserRepository from "../dao/repository/userRepository.js"
-import { createHash, generateToken } from "../utils.js";
+import { createHash, generateToken } from "../utils/utils.js";
+import CustomError from "../services/errors/CustomErrors.js";
+import EErrors from "../services/errors/enums.js";
+import { generateUserErrorInfo } from "../services/errors/info.js";
 
 // Vista del registro y creacion del usuario
 export const createUser = async (req, res) => {
@@ -15,6 +18,14 @@ export const createUser = async (req, res) => {
             role
         }
 
+        if( !first_name || !last_name || !email ) {
+            CustomError.createError({
+                name: "User creatin error",
+                cause: generateUserErrorInfo({first_name, last_name, email}),
+                message: "Error en crear usuario",
+                code: EErrors.INVALID_TYPES_ERROR
+            })
+        }
         if(user.email === "ivan.r4amire5@gmail.com"){
             user.role = "admin"
         }else{

@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import passport from 'passport';
 import * as dotenv from "dotenv"
+import { faker } from "@faker-js/faker"
 
 // Config dotenv
 dotenv.config();
@@ -13,14 +14,13 @@ export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSy
 // Validacion de contraseña
 export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password);
 
-
-
 // Creacion del token
 export const generateToken = (user) => {
     const token = jwt.sign({ user }, PRIVATE_KEY, { expiresIn: '24h' })
     return token
 }
 
+//Autenticamos el token
 export const authToken = (req, res, next) => {
     const authHeader = req.headers.authorization
     if (!authHeader) return res.status(400).send({ error: 'Not authenticated' })
@@ -33,6 +33,7 @@ export const authToken = (req, res, next) => {
     })
 }
 
+//Llamamos el passport
 export const passportCall = (strategy) => {
     return async (req, res, next) => {
         passport.authenticate(strategy, function (error, user, info) {
@@ -46,3 +47,18 @@ export const passportCall = (strategy) => {
         })(req, res, next);
     };
 };
+
+//Creamos mocking usando faker
+export const createRandomProducts = () => {
+    return {
+        title: faker.string.productName(),
+        code: faker.string.alphanumeric(),
+        description: faker.commerce.productDescription(),
+        price: faker.commerce.price(),
+        status: faker.datatype.boolean(),
+        stock: faker.string.numeric(1),
+        category: faker.commerce.product(),
+        thumbnail: faker.image.url(),
+        quantity: 1
+    }
+}

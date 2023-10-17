@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { logoutUser } from "../controller/userControllers.js";
 import userSchema from "../dao/mongo/models/userSchema.js";
-import { authToken, createHash, generateToken, isValidPassword, passportCall } from "../utils.js";
+import { authToken, createHash, generateToken, isValidPassword, passportCall } from "../utils/utils.js";
 import passport from "passport";
 
 

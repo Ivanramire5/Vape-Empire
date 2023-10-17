@@ -1,7 +1,7 @@
 
 import UserDTO from "../DTO/users.dto.js"
 import UserMongooseDao from "../../dao/mongo/UserMongooseDao.js"
-import { isValidPassword } from "../../utils.js"
+import { isValidPassword } from "../../utils/utils.js"
 
 
 class UserRepository {

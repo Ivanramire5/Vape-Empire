@@ -11,11 +11,13 @@ import * as dotenv from "dotenv"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from 'connect-mongo'
 
+import errorHandler from "./middlewares/errors/index.js"
+
 //Importamos las rutas
 import CarritoRoute from "./routes/carts.routes.js"
 import ProductsRoute from "./routes/products.routes.js"
 import SessionRoute from "./routes/session.routes.js"
-
+import MockRoute from "./routes/mock.routes.js"
 //Dotenv
 dotenv.config();
 //Definimos el puerto
@@ -27,6 +29,9 @@ const MONGO_URI = process.env.MONGO_URI
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(errorHandler)
+
+
 
 //session con mongo
 app.use(
@@ -81,6 +86,7 @@ app.set('views', viewsPath);
 app.use("/products", ProductsRoute);
 app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);
+app.use("/mockingproducts", MockRoute)
 
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))
