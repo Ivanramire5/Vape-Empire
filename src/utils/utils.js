@@ -51,14 +51,13 @@ export const passportCall = (strategy) => {
 //Creamos mocking usando faker
 export const createRandomProducts = () => {
     return {
-        title: faker.string.productName(),
-        code: faker.string.alphanumeric(),
+        title: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
+        code: faker.commerce.department(),
         price: faker.commerce.price(),
-        status: faker.datatype.boolean(),
+        status: true,
         stock: faker.string.numeric(1),
-        category: faker.commerce.product(),
-        thumbnail: faker.image.url(),
-        quantity: 1
+        category: faker.commerce.productAdjective(),
+        thumbanail: faker.image.url()
     }
 }
