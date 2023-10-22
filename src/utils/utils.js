@@ -12,7 +12,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 // Validacion de contraseña
-export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password);
+export const isValidPassword = (password, user) => bcrypt.compareSync(password, user);
 
 // Creacion del token
 export const generateToken = (user) => {

@@ -5,7 +5,9 @@ import { createProduct, deleteProduct, getProductById, getProducts, updateProduc
 const ProductsRoute = Router()
 
 ProductsRoute.post('/', createProduct)
-ProductsRoute.get('/', getProducts)
+ProductsRoute.get('/', (req, res) => {
+    res.render("realtimeproducts")
+})
 ProductsRoute.get('/:id', getProductById)
 ProductsRoute.put('/:id', updateProduct)
 ProductsRoute.delete('/:id', deleteProduct)

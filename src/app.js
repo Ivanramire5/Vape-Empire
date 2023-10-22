@@ -18,6 +18,7 @@ import CarritoRoute from "./routes/carts.routes.js"
 import ProductsRoute from "./routes/products.routes.js"
 import SessionRoute from "./routes/session.routes.js"
 import MockRoute from "./routes/mock.routes.js"
+import ChatRouter  from "./routes/chat.routes.js";
 //Dotenv
 dotenv.config();
 //Definimos el puerto
@@ -57,7 +58,7 @@ app.use(passport.session());
 
 try {
   await mongoose.connect(MONGO_URI)
-  console.log("BD connected");
+  console.log("Base de datos conectada");
 } catch (error) {
   console.log(error)
 }
@@ -83,6 +84,7 @@ app.set('views', viewsPath);
 
 
 // RUTAS
+app.use("/chat", ChatRouter);
 app.use("/products", ProductsRoute);
 app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);

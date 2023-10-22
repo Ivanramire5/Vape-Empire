@@ -4,8 +4,12 @@
             <h1 class="tituloRealtime">Vape Empire</h1>
             <h2 class="subtituloRealtime">Todos nuestros productos en venta</h2>
         </div>
+        <div class="botonChat">
+            <button class="formaBoton"><a href="http://localhost:8080/chat">📩</a></a></button>
+            <p class="subtituloChat">CHAT</p>
+        </div>
+        
     <form id="productForm" method="POST" action="/realTimeProducts">
-    <label class="nombreFormulario" for="productName">Nombre del producto:</label>
     <ul id="productList">
         {{#each products}}
             <li>
@@ -13,17 +17,22 @@
                     <img class="productImg" src={{this.thumbnail}} />
                 </div>
                 <div class="tarjetaProducto">
+                    <p>Id: {{this.id}}</p>
                     <h3>{{this.name}}</h3>
                     <p class="tituloTarjeta">{{this.title}}</p>
                     <p>{{this.description}}</p>
                     <p class="precioTarjeta">Precio: {{this.price}}</p>
+                </div>
+                <div>
+                    <button class="agregarCarrito">Agregar al carrito</button>
                 </div>
             </li>
         {{/each}}
     </ul>
 </div>
 <script src="/js/index.js"></script>
-<script src="/js/realTimeProducts.js"></script
+<script src="/js/realTimeProducts.js"></script>
+<script src="/js/products.js"></script>
 
 
 

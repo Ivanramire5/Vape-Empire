@@ -6,20 +6,20 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
     let first_name = document.getElementById("first_name").value;
     let last_name = document.getElementById("last_name").value;
-    let mail = document.getElementById("mail").value;
-    let user = document.getElementById("user").value;
+    let email = document.getElementById("email").value;
+    let age = document.getElementById("age").value;
     let password = document.getElementById("password").value;
-    signup(first_name, last_name, mail, user, password).then(data => console.log(data));
+    signup(first_name, last_name, email, age, password).then(data => console.log(data));
 });
 
-const signup = async (first_name, last_name, mail, user, password) => {
-    console.log(JSON.stringify({first_name, last_name, mail, user, password}))
+const signup = async (first_name, last_name, email,age, password) => {
+    console.log(JSON.stringify({first_name, last_name, email, age, password}))
     const response = await fetch("/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ first_name, last_name, mail, user, password }) // Corrección aquí
+        body: JSON.stringify({ first_name, last_name, email, age, password }) // Corrección aquí
     });
     const data = await response.json(); // Se agrega el await aquí
     if(data.status === "success"){

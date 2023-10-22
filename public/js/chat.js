@@ -1,6 +1,6 @@
 
 console.log("Estamos probando")
-const socket = io();
+
 
 let chatBox = document.getElementById("chatBox");
 console.log("prueba de chatBox");

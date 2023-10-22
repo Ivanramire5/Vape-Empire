@@ -12,7 +12,7 @@ form.addEventListener("submit", (e) => {
 });
 
 const loguearse = async (mail, password) => {
-    const response = await fetch("/products", {
+    const response = await fetch("/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -27,14 +27,18 @@ const loguearse = async (mail, password) => {
             "Ya puede ingresar a la pagina",
             "success"
         )
-        setTimeout(() => {
-            window.location.href =  loc[0]+":"+loc[1]+":"+loc[2].split("/")[0]+"/views";
-        }, 2000);
-    } else {
-        Swal.fire(
-            'Usuario incorrecto',
-            'Reintentelo otra vez',
-            'error'
-        );
+            setTimeout(() => {
+                window.location.href =  loc[0]+":"+loc[1]+":"+loc[2].split("/")[0]+"/views";
+            }, 2000);
+        } else {
+            Swal.fire(
+                'Usuario incorrecto',
+                'Reintentelo otra vez',
+                'error'
+            ).then((value) => {
+            if (value) {
+                window.location.href = "http://localhost:8080/products";
+            }
+        });
     }
-};
+}

@@ -17,6 +17,7 @@ SessionRoute.get("/signup", (req, res) => {
 
 // Registro con jwt
 SessionRoute.post('/register', async (req, res) => {
+    console.log(req.body)
     const { first_name, last_name, email, password, age } = req.body
     const exist = await userSchema.findOne({ email: email })
     if (exist) return res.status(400).send({ status: 'error', error: 'User already exist' })
@@ -37,13 +38,14 @@ SessionRoute.post('/register', async (req, res) => {
 
 // Login con jwt
 SessionRoute.post('/login', async (req, res) => {
-    const { email, password } = req.body
-    const user = await userSchema.findOne({ email: email })
-
-    if (!user) return res.status(400).send({ status: 'errorr', error: 'Ivalid credentials' })
-
-    if (!isValidPassword(user, password)) return res.status(400).send({ status: 'errorr', error: 'Ivalid credentials' })
-
+    const { mail, password } = req.body
+    console.log("veamos que datos llegan", req.body)
+    const user = await userSchema.findOne({ email: mail })
+    console.log("probemos esto", user.password)
+    if (!user) return res.status(400).send({ status: 'errorr', error: 'Usuario no encontrado' })
+    console.log(isValidPassword(password, user.password))
+    if (!isValidPassword(password, user.password)) return res.status(400).send({ status: 'errorr', error: 'Ivalid credentials' })
+    console.log("Estoy en la linea 49")
     const access_token = generateToken(user)
     res.cookie('coderTokenCookie', access_token, {
         maxAge: 60*60*1000,

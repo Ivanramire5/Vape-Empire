@@ -1,8 +1,4 @@
 
-const socket = io();
-
-socket.emit("connection", "nuevo cliente conectado");
-
 document.getElementById("productForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const productName = document.getElementById("productName").value;

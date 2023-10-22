@@ -1,7 +1,4 @@
 
-const socket = io();
-
-socket.emit("connection", "nuevo cliente conectado");
 
 document.getElementById("productForm").addEventListener("submit", (event) => {
     event.preventDefault();

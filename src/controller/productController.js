@@ -14,35 +14,41 @@ export const createProduct = async (req, res) => {
             code,
             price,
             status,
+            stock,
             thumbnail
         }
         if (!title || !description || !code) {
             CustomError.createError({
-                name: "User error",
+                name: 'User creation error',
                 cause: generateProductErrorInfo({ title, description, code }),
-                message: "Error para crear el usuario",
+                message: 'Error in create User',
                 code: EErrors.INVALID_TYPES_ERROR
             })
         }
 
         const manager = new ProductRepository()
-        const products = await manager.createProduct(req.body)
+        const result = await manager.createProduct(product)
 
-        res.send({ status: 'sucess', products, message: 'Product created.' })
+        res.send({ status: 'sucess', result, message: 'Product created.' })
     } catch (error) {
         console.log('Erorr in created products' + error)
     }
 }
 
 // Obtener todos los productos
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res, next) => {
     try {
+        console.log("el error es este", req.query) //Me devuelve un {}
         const manager = new ProductRepository()
-        const { limit, sort, category, page } = req.query
+        
+        let limit = null, sort = null, category = null, page = null;
+        if (req.query) {
+            ({ limit = null, sort = null, category = null, page = null } = req.query)
+        }
         const products = await manager.getProducts(+limit, sort, category, +page)
         res.send({ status: 'sucess', products })
     } catch (error) {
-        console.log('Erorr in getAll products' + error)
+        console.log('Erorr en todos los productos' + error) //Error acá
     }
 }
 
@@ -77,7 +83,7 @@ export const deleteProduct = async (req, res) => {
         const { id } = req.params
         const manager = new ProductRepository()
         const product = await manager.deleteProduct(id)
-        res.send({status:'sucess', product, message: 'Product deleted.'})
+        res.send({ status: 'sucess', product, message: 'Product deleted.' })
     } catch (error) {
         console.log('Erorr in deleteProductById' + error)
     }

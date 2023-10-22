@@ -6,7 +6,7 @@
 //Para utilizar un query se coloca en el navegador este simbolo &
 
 //Para probar la funcionalidad del codigo en thunderclient o en postman codear lo siguiente:
-    GET: http://localhost:8083/api/products/ (la id que queres traer)
+    GET: http://localhost:8080/api/products/ (la id que queres traer)
 
 Colores para el e-commerce = [
     fondo: #EEEEEE o #F6F6F6 o #F4EEEE
