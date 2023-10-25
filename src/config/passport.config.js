@@ -7,8 +7,6 @@ import userService from "../dao/mongo/models/userSchema.js"
 dotenv.config();
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
-
-
 const cookieExtractor = req => {
     let token = null
     if (req && req.cookies){
@@ -17,6 +15,7 @@ const cookieExtractor = req => {
     return token
 }
 
+//jwt
 const JWTstrategy = jwt.Strategy
 const ExtractJWT = jwt.ExtractJwt
 
@@ -57,7 +56,7 @@ const initializePassport = () => {
                     first_name: profile._json.name,
                     last_name: "F",
                     age: 18,
-                    email: "ivan1234567" + "@gmail.com",
+                    email: "ivan1234567@gmail.com",
                     password: "123"
                 }
                 console.log("Error", newUser)

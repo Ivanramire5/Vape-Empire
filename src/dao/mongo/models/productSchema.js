@@ -11,6 +11,7 @@ const ProductSchema = new mongoose.Schema({
     description: String,
     code: Number,
     price: Number,
+    status: Boolean,
     stock: Number,
     category: {
         type: String,
@@ -18,7 +19,6 @@ const ProductSchema = new mongoose.Schema({
         
     },
     thumbnail: String
-    
 })
 
 

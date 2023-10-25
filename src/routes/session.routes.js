@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { logoutUser } from "../controller/userControllers.js";
+import { createUser, currentUser, getUser } from "../controller/userControllers.js"
 import userSchema from "../dao/mongo/models/userSchema.js";
-import { authToken, createHash, generateToken, isValidPassword, passportCall } from "../utils/utils.js";
+import { createHash, generateToken, isValidPassword, passportCall, validateRoleAdmin } from "../utils/utils.js";
 import passport from "passport";
 
 
@@ -16,7 +16,7 @@ SessionRoute.get("/signup", (req, res) => {
 })
 
 // Registro con jwt
-SessionRoute.post('/register', async (req, res) => {
+SessionRoute.post('/register', createUser, async (req, res) => {
     console.log(req.body)
     const { first_name, last_name, email, password, age } = req.body
     const exist = await userSchema.findOne({ email: email })
@@ -37,7 +37,7 @@ SessionRoute.post('/register', async (req, res) => {
 })
 
 // Login con jwt
-SessionRoute.post('/login', async (req, res) => {
+SessionRoute.post('/login', getUser, async (req, res) => {
     const { mail, password } = req.body
     console.log("veamos que datos llegan", req.body)
     const user = await userSchema.findOne({ email: mail })
@@ -54,13 +54,10 @@ SessionRoute.post('/login', async (req, res) => {
 })
 
 // Route current 
-SessionRoute.get('/current', passportCall('jwt'), (req, res) => {
-    res.send(req.user)
-})
+SessionRoute.get('/current', passportCall('jwt'), validateRoleAdmin, currentUser) 
 
 //Github
 SessionRoute.get("/api/sessions/github", passport.authenticate("github", {scope:["user: email"]}), async (req, res) => {})
-
 SessionRoute.get("/api/sessions/githubcallback", passport.authenticate("github", {failureRedirect: "/login"}), async (req, res) => {
     req.session.user = req.user;
     res.redirect("/")

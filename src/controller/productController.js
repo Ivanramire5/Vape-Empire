@@ -31,7 +31,10 @@ export const createProduct = async (req, res) => {
 
         res.send({ status: 'sucess', result, message: 'Product created.' })
     } catch (error) {
-        console.log('Erorr in created products' + error)
+        req.logger.error('Error in createProduct: ' + error.message)
+        req.logger.error(error.stack)
+        res.status(500).json({ error: 'Internal server error '})
+        //console.log('Erorr in created products' + error)
     }
 }
 
@@ -40,11 +43,7 @@ export const getProducts = async (req, res, next) => {
     try {
         console.log("el error es este", req.query) //Me devuelve un {}
         const manager = new ProductRepository()
-        
-        let limit = null, sort = null, category = null, page = null;
-        if (req.query) {
-            ({ limit = null, sort = null, category = null, page = null } = req.query)
-        }
+        const { limit, sort, category, page } = req.query
         const products = await manager.getProducts(+limit, sort, category, +page)
         res.send({ status: 'sucess', products })
     } catch (error) {

@@ -4,13 +4,13 @@ import mongoose from "mongoose"
 import cookieParser from "cookie-parser";
 import { engine } from 'express-handlebars';
 import { createRequire } from 'module';
+import { addLogger } from './middlewares/loggers/logger.js'
 import session from "express-session"
 import passport from 'passport';
 import path from 'path';
 import * as dotenv from "dotenv"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from 'connect-mongo'
-
 import errorHandler from "./middlewares/errors/index.js"
 
 //Importamos las rutas
@@ -18,7 +18,9 @@ import CarritoRoute from "./routes/carts.routes.js"
 import ProductsRoute from "./routes/products.routes.js"
 import SessionRoute from "./routes/session.routes.js"
 import MockRoute from "./routes/mock.routes.js"
-import ChatRouter  from "./routes/chat.routes.js";
+import ChatRouter  from "./routes/chat.routes.js"
+import loggerTest from "./routes/loggerTest.routes.js"
+
 //Dotenv
 dotenv.config();
 //Definimos el puerto
@@ -82,6 +84,9 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', viewsPath);
 
+//Logger
+app.use(addLogger)
+app.use("/api/loggerTest", loggerTest)
 
 // RUTAS
 app.use("/chat", ChatRouter);
@@ -89,6 +94,7 @@ app.use("/products", ProductsRoute);
 app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);
 app.use("/mockingproducts", MockRoute)
+
 
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))

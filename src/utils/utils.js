@@ -19,6 +19,13 @@ export const generateToken = (user) => {
     const token = jwt.sign({ user }, PRIVATE_KEY, { expiresIn: '24h' })
     return token
 }
+// Autorizacion de roles
+export const validateRoleAdmin = (req, res, next) => {
+    const { role } = req.user;
+    console.log(role)
+    if (role !== 'admin') return res.status(500).json({ error: 'No tiene permisos' })
+    next()
+}
 
 //Autenticamos el token
 export const authToken = (req, res, next) => {
@@ -31,6 +38,12 @@ export const authToken = (req, res, next) => {
         req.user = credentials.user
         next()
     })
+}
+//Validamos el rol del usuario
+export const validateRoleUser = (req, res, next) => {
+    const { role } = req.user;
+    if (role !== 'user') return res.status(500).json({ error: 'No tiene permisos' })
+    next()
 }
 
 //Llamamos el passport
