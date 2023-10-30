@@ -1,0 +1,139 @@
+
+paths:
+  /api/cart/:
+    get:
+      summary: Añade los productos al carrito
+      tags:
+        - Cart
+      responses:
+        "200":
+          description: Los productos fueron añadidos con exito
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Carts"
+        "500":
+          description: Hubo un error al llenar el carrito con los productos
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Carts"
+  /api/cart/{uid}:
+    get:
+      summary: Busca un producto por su id
+      tags:
+        - Cart
+      parameters:
+      - name: uid
+        in: path
+        required: true
+        description: Id del producto que solicita
+        schema:
+          $type: String
+        responses: 
+          "200":
+            description: Producto encontrado exitosamente
+            content:
+              aplication/json:
+                schema:
+                  $ref: "#components/schemas/Cart"
+    put:
+      summary: Añade un nuevo producto al carrito
+      tags:
+        - Cart
+      parameters:
+      - name: product
+        in: path
+        required: true
+        description: Producto que va a agregar
+        schema:
+          $type: String
+      requestBody:
+        required: true
+        content:
+          aplication/json:
+            schema:
+              $ref: "#components/requestBodies/updateCart"
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id: 
+          type: String
+          description: Id del producto
+        category:
+          type: String
+          description: Categoria del producto
+        title:
+          type: String
+          description: Nombre del producto
+        modelo: 
+          type: String
+          description: Modelo del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        price:
+          type: Number
+          description: Precio del producto
+      example:
+        id: ProductId("sASdSDAjggd544fasadasSDSADAF6464ASF4242")
+        category: "atomizadores"
+        title: "atomizador rda"
+        marca: "Dead Rabbit"
+        modelo: "HellVape v3 RDA"
+        description: "atomizador de 2 resistencias sin tanque"
+        thumbnail: "https://cdnx.jumpseller.com/santivape/image/21351122/resize/640/640?1667453259"
+        code: "def45645"
+        price: 80
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        id: 
+          type: ProductId
+          description: Id del producto
+        category:
+          type: String
+          description: Categoria del producto
+        title:
+          type: String
+          description: Nombre del producto
+        modelo: 
+          type: String
+          description: Modelo del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        price:
+          type: Number
+          description: Precio del producto
+      example:
+        id: ProductId("sadadasdaeqwqdqrqsadqwzdvdrtetvcxvdw")
+        category: "mods"
+        title: "mod mecanico doble bateria"
+        marca: "Coil Art"
+        modelo: "Dpro"
+        color: "rojo"
+        price: 150
+        description:  "Mod mecanico de doble bateria 18650"
+        thumbnail: "https://www.compraensanjuan.com/fotos_articulos/1283076_2.jpg"
+        code: "def45dsfsdfs6"

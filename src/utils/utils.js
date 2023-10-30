@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import passport from 'passport';
 import * as dotenv from "dotenv"
 import { faker } from "@faker-js/faker"
+import { dirname } from "path"
+import { fileURLToPath } from 'url';
 
 // Config dotenv
 dotenv.config();
@@ -61,6 +63,10 @@ export const passportCall = (strategy) => {
     };
 };
 
+//Dirname y filename
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 //Creamos mocking usando faker
 export const createRandomProducts = () => {
     return {
@@ -74,3 +80,5 @@ export const createRandomProducts = () => {
         thumbanail: faker.image.url()
     }
 }
+
+export default __dirname;

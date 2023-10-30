@@ -1,0 +1,136 @@
+
+paths:
+  /api/products/:
+    get:
+      summary: Obten todos los products
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos con exito
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Hubo un error al obtener el producto solicitado
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+  /api/products/{uid}:
+    get:
+      summary: Obten un producto por su id
+      tags:
+        - Products
+      parameters:
+      - name: uid
+        in: path
+        required: true
+        description: Id del producto que solicita
+        schema:
+          $type: String
+        responses: 
+          "200":
+            description: producto encontrado exitosamente
+            content:
+              aplication/json:
+                schema:
+                  $ref: "#components/schemas/Product"
+    put:
+      summary: Actualiza un producto a partir de su id
+      tags:
+        - products
+      parameters:
+      - name: uid
+        in: path
+        required: true
+        description: id del producto que se desea solicitar.
+        schema:
+          $type: String
+      requestBody:
+        required: true
+        content:
+          aplication/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id: 
+          type: String
+          description: Id del producto
+        category:
+          type: String
+          description: Categoria del producto
+        title:
+          type: String
+          description: Nombre del producto
+        modelo: 
+          type: String
+          description: Modelo del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        price:
+          type: Number
+          description: Precio del producto
+      example:
+        id: ProductId("sASdSDAjggd544SDSADAF6464ASF424adsadxwe2")
+        category: "Liquidos"
+        title: "Amazing Mango"
+        modelo: "Naked"
+        description: "Delicioso batido de mango, durazno y crema"
+        thumbnail: "https://d22fxaf9t8d39k.cloudfront.net/7f950d25108557dee03c14cb22b98684d30192d094fed92f5858a35469bef949105786.jpeg"
+        code: "detyryyfgfokghdsdadefwsxdcxdf456"
+        price: 20
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        id: 
+          type: ProductId
+          description: Id del producto
+        category:
+          type: String
+          description: Categoria del producto
+        title:
+          type: String
+          description: Nombre del producto
+        modelo: 
+          type: String
+          description: Modelo del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        thumbnail:
+          type: Img
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        price:
+          type: Number
+          description: Precio del producto
+      example:
+        id: ProductId("sadadasdaeqwqdqrqw")
+        category: "Liquidos"
+        title: "Juice Fruity Bears"
+        modelo: "Pod Juice"
+        description:  "Sabor a ositos de goma"
+        thumbnail: "https://hamzav.com/cdn/shop/files/1452.webp?v=1685500482"
+        code: "detyryyfgfokghdsdadefwsxdcxdf456"

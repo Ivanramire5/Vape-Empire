@@ -5,7 +5,6 @@ export const generateUserErrorInfo = (user) => {
         * first_name: need to be a String, received ${user.first_name}
         * last_name: need to be a String, received ${user.last_name}
         * email: need to be a String, received ${user.email}
-    
     `
 }
 
@@ -15,6 +14,5 @@ export const generateProductErrorInfo = (product) => {
         * first_name: need to be a String, received ${product.title}
         * last_name: need to be a String, received ${product.code}
         * email: need to be a String, received ${product.description}
-    
     `
 }

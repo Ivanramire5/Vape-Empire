@@ -12,6 +12,9 @@ import * as dotenv from "dotenv"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from 'connect-mongo'
 import errorHandler from "./middlewares/errors/index.js"
+import swaggerJsdoc from "swagger-jsdoc";
+import  SwaggerUiExpress from "swagger-ui-express";
+import __dirname from "./utils/utils.js"
 
 //Importamos las rutas
 import CarritoRoute from "./routes/carts.routes.js"
@@ -26,6 +29,7 @@ dotenv.config();
 //Definimos el puerto
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
+const connection = mongoose.connect(`mongodb+srv://ivanr4amire5:y9tN2DQWF1a5tQmH@database1.hng81to.mongodb.net/e-commerce`)
 //configuration()
 
 //Iniciamos la app
@@ -34,7 +38,20 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(errorHandler)
 
+//Swagger
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Vape Empire",
+      description: "Probamos API de Swagger para el proyecto final"
+    }
+  },
+  apis: ["./src/docs/**/*.yaml"],
+}
 
+//Conexion de swagger
+const specs = swaggerJsdoc(swaggerOptions);
 
 //session con mongo
 app.use(
@@ -94,6 +111,7 @@ app.use("/products", ProductsRoute);
 app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);
 app.use("/mockingproducts", MockRoute)
+app.use("/apidocs", SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
 
 
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
