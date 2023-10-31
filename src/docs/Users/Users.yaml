@@ -4,7 +4,7 @@ paths:
     get:
       summary: Obten todos los usuarios
       tags:
-        - Users
+        - Userss
       responses:
         "200":
           description: Los datos fueron cargados exitosamente a la base de datos
@@ -13,7 +13,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/User"
+                  $ref: "#components/schemas/Users"
         "500":
           description: Hubo un error al momento de cargar la base de datos al servidor. Intente de nuevo
           content:
@@ -21,7 +21,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/User"
+                  $ref: "#components/schemas/Users"
   /api/users/{uid}:
     get:
       summary: Obten un usuario por su id
@@ -40,7 +40,7 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: "#components/schemas/User"
+                  $ref: "#components/schemas/Users"
     put:
       summary: Actualiza un usuario a partir de su id
       tags:
@@ -57,12 +57,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requestBodies/updateUser"
+              $ref: "#components/requestBodies/updateUsers"
 
 
 components:
   schemas:
-    User:
+    Users:
       type: object
       properties:
         _id: 
@@ -87,7 +87,7 @@ components:
         email: "fabrisal@gmail.com"
         password: "$sad231sodw44394120dskfsiwpedempw3302492"
   requestBodies:
-    updateUser:
+    updateUsers:
       type: object
       properties: 
         first_name:

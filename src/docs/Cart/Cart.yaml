@@ -4,7 +4,7 @@ paths:
     get:
       summary: Añade los productos al carrito
       tags:
-        - Cart
+        - Carts
       responses:
         "200":
           description: Los productos fueron añadidos con exito
@@ -26,7 +26,7 @@ paths:
     get:
       summary: Busca un producto por su id
       tags:
-        - Cart
+        - Carts
       parameters:
       - name: uid
         in: path
@@ -40,11 +40,11 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: "#components/schemas/Cart"
+                  $ref: "#components/schemas/Carts"
     put:
       summary: Añade un nuevo producto al carrito
       tags:
-        - Cart
+        - Carts
       parameters:
       - name: product
         in: path
@@ -61,7 +61,7 @@ paths:
 
 components:
   schemas:
-    Cart:
+    Carts:
       type: object
       properties:
         _id: 
@@ -99,7 +99,7 @@ components:
         code: "def45645"
         price: 80
   requestBodies:
-    updateProduct:
+    updateCart:
       type: object
       properties:
         id: 

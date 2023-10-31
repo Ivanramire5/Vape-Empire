@@ -40,11 +40,11 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: "#components/schemas/Product"
+                  $ref: "#components/schemas/Products"
     put:
       summary: Actualiza un producto a partir de su id
       tags:
-        - products
+        - Products
       parameters:
       - name: uid
         in: path
@@ -57,12 +57,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#components/requestBodies/updateProduct"
+              $ref: "#components/requestBodies/updateProducts"
 
 
 components:
   schemas:
-    Product:
+    Products:
       type: object
       properties:
         _id: 
@@ -99,7 +99,7 @@ components:
         code: "detyryyfgfokghdsdadefwsxdcxdf456"
         price: 20
   requestBodies:
-    updateProduct:
+    updateProducts:
       type: object
       properties:
         id: 
