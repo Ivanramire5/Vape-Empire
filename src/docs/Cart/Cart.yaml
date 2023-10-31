@@ -9,7 +9,7 @@ paths:
         "200":
           description: Los productos fueron añadidos con exito
           content:
-            aplication/json:
+            application/json:
               schema:
                 type: array
                 items:
@@ -17,7 +17,7 @@ paths:
         "500":
           description: Hubo un error al llenar el carrito con los productos
           content:
-            aplication/json:
+            application/json:
               schema:
                 type: array
                 items:
@@ -38,7 +38,7 @@ paths:
           "200":
             description: Producto encontrado exitosamente
             content:
-              aplication/json:
+              application/json:
                 schema:
                   $ref: "#components/schemas/Cart"
     put:
@@ -55,7 +55,7 @@ paths:
       requestBody:
         required: true
         content:
-          aplication/json:
+          application/json:
             schema:
               $ref: "#components/requestBodies/updateCart"
 

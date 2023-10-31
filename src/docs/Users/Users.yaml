@@ -9,7 +9,7 @@ paths:
         "200":
           description: Los datos fueron cargados exitosamente a la base de datos
           content:
-            aplication/json:
+            application/json:
               schema:
                 type: array
                 items:
@@ -17,7 +17,7 @@ paths:
         "500":
           description: Hubo un error al momento de cargar la base de datos al servidor. Intente de nuevo
           content:
-            aplication/json:
+            application/json:
               schema:
                 type: array
                 items:
@@ -38,7 +38,7 @@ paths:
           "200":
             description: Usuario encontrado exitosamente
             content:
-              aplication/json:
+              application/json:
                 schema:
                   $ref: "#components/schemas/User"
     put:
@@ -55,7 +55,7 @@ paths:
       requestBody:
         required: true
         content:
-          aplication/json:
+          application/json:
             schema:
               $ref: "#components/requestBodies/updateUser"
 
