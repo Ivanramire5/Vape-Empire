@@ -4,7 +4,7 @@ paths:
     get:
       summary: Obten todos los usuarios
       tags:
-        - Userss
+        - Users
       responses:
         "200":
           description: Los datos fueron cargados exitosamente a la base de datos
