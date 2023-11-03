@@ -37,14 +37,24 @@ export const createProduct = async (req, res) => {
         //console.log('Erorr in created products' + error)
     }
 }
-
-// Obtener todos los productos
-export const getProducts = async (req, res, next) => {
+export const productsRealTime = async (req, res) => {
     try {
-        console.log("el error es este", req.query) //Me devuelve un {}
         const manager = new ProductRepository()
         const { limit, sort, category, page } = req.query
         const products = await manager.getProducts(+limit, sort, category, +page)
+        console.log("referencia", products)
+        res.render("realtimeproducts", {products: products})
+    } catch (error) {
+        console.log('Erorr en todos los productos' + error) //Error acá
+    }
+}
+// Obtener todos los productos
+export const getProducts = async (req, res, next) => {
+    try {
+        const manager = new ProductRepository()
+        const { limit, sort, category, page } = req.query
+        const products = await manager.getProducts(+limit, sort, category, +page)
+        console.log(products)
         res.send({ status: 'sucess', products })
     } catch (error) {
         console.log('Erorr en todos los productos' + error) //Error acá

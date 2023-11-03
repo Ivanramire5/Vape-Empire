@@ -1,6 +1,6 @@
 
 paths:
-  /api/cart/:
+  /carts/:
     get:
       summary: Añade los productos al carrito
       tags:
@@ -22,18 +22,18 @@ paths:
                 type: array
                 items:
                   $ref: "#components/schemas/Carts"
-  /api/cart/{uid}:
+  /carts/{u_id}:
     get:
-      summary: Busca un producto por su id
+      summary: Busca un producto por su _id
       tags:
         - Carts
       parameters:
-      - name: uid
+      - name: u_id
         in: path
         required: true
-        description: Id del producto que solicita
+        description: _id del producto que solicita
         schema:
-          $type: String
+          type: String
         responses: 
           "200":
             description: Producto encontrado exitosamente
@@ -51,7 +51,7 @@ paths:
         required: true
         description: Producto que va a agregar
         schema:
-          $type: String
+          type: String
       requestBody:
         required: true
         content:
@@ -64,9 +64,9 @@ components:
     Carts:
       type: object
       properties:
-        _id: 
+        __id: 
           type: String
-          description: Id del producto
+          description: id del producto
         category:
           type: String
           description: Categoria del producto
@@ -80,16 +80,16 @@ components:
           type: String
           description: Caracteristicas del producto
         thumbnail:
-          type: Img
+          type: String
           description: Imagen del producto
         code:
           type: String
           description: Codigo del producto
         price:
-          type: Number
+          type: number
           description: Precio del producto
       example:
-        id: ProductId("sASdSDAjggd544fasadasSDSADAF6464ASF4242")
+        _id: "sASdSDAjggd544fasadasSDSADAF6464ASF4242"
         category: "atomizadores"
         title: "atomizador rda"
         marca: "Dead Rabbit"
@@ -102,9 +102,9 @@ components:
     updateCart:
       type: object
       properties:
-        id: 
-          type: ProductId
-          description: Id del producto
+        _id: 
+          type: String
+          description: id del producto
         category:
           type: String
           description: Categoria del producto
@@ -118,7 +118,7 @@ components:
           type: String
           description: Caracteristicas del producto
         thumbnail:
-          type: Img
+          type: String
           description: Imagen del producto
         code:
           type: String
@@ -127,7 +127,7 @@ components:
           type: Number
           description: Precio del producto
       example:
-        id: ProductId("sadadasdaeqwqdqrqsadqwzdvdrtetvcxvdw")
+        _id: "sadadasdaeqwqdqrqsadqwzdvdrtetvcxvdw"
         category: "mods"
         title: "mod mecanico doble bateria"
         marca: "Coil Art"

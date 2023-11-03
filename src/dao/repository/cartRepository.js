@@ -16,7 +16,9 @@ class CartRepository {
     async getCartById(id) {
         return this.cartDao.getCartById(id)
     }
-
+    async getAllCarts() {
+        return this.cartDao.getAllCarts()
+    }
     // Eliminar carrito
     async deleteCart(id) {
         return this.cartDao.deleteCart(id)

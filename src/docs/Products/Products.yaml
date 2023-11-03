@@ -1,6 +1,6 @@
 
 paths:
-  /api/products/:
+  /products/:
     get:
       summary: Obten todos los products
       tags:
@@ -22,9 +22,9 @@ paths:
                 type: array
                 items:
                   $ref: "#components/schemas/Products"
-  /api/products/{uid}:
+  /products/{uid}:
     get:
-      summary: Obten un producto por su id
+      summary: Obten un producto por su _id
       tags:
         - Products
       parameters:
@@ -33,7 +33,7 @@ paths:
         required: true
         description: Id del producto que solicita
         schema:
-          $type: String
+          type: String
         responses: 
           "200":
             description: producto encontrado exitosamente
@@ -42,16 +42,16 @@ paths:
                 schema:
                   $ref: "#components/schemas/Products"
     put:
-      summary: Actualiza un producto a partir de su id
+      summary: Actualiza un producto a partir de su _id
       tags:
         - Products
       parameters:
       - name: uid
         in: path
         required: true
-        description: id del producto que se desea solicitar.
+        description: _id del producto que se desea solicitar.
         schema:
-          $type: String
+          type: String
       requestBody:
         required: true
         content:
@@ -59,10 +59,46 @@ paths:
             schema:
               $ref: "#components/requestBodies/updateProducts"
 
-
 components:
   schemas:
     Products:
+      type: object
+      properties:
+        _id: 
+          type: String
+          description: Id del producto
+        category:
+          type: String
+          description: Categoria del producto
+        title:
+          type: String
+          description: Nombre del producto
+        modelo: 
+          type: String
+          description: Modelo del producto
+        description:
+          type: String
+          description: Caracteristicas del producto
+        thumbnail:
+          type: String
+          description: Imagen del producto
+        code:
+          type: String
+          description: Codigo del producto
+        price:
+          type: Number
+          description: Precio del producto
+      example:
+        _id: "sASdSDAjggd544SDSADAF6464ASF424adsadxwe2"
+        category: "Liquidos"
+        title: "Amazing Mango"
+        modelo: "Naked"
+        description: "Delicioso batido de mango, durazno y crema"
+        thumbnail: "https://d22fxaf9t8d39k.cloudfront.net/7f950d25108557dee03c14cb22b98684d30192d094fed92f5858a35469bef949105786.jpeg"
+        code: "detyryyfgfokghdsdadefwsxdcxdf456"
+        price: 20
+  requestBodies:
+    updateProducts:
       type: object
       properties:
         _id: 
@@ -90,44 +126,7 @@ components:
           type: Number
           description: Precio del producto
       example:
-        id: ProductId("sASdSDAjggd544SDSADAF6464ASF424adsadxwe2")
-        category: "Liquidos"
-        title: "Amazing Mango"
-        modelo: "Naked"
-        description: "Delicioso batido de mango, durazno y crema"
-        thumbnail: "https://d22fxaf9t8d39k.cloudfront.net/7f950d25108557dee03c14cb22b98684d30192d094fed92f5858a35469bef949105786.jpeg"
-        code: "detyryyfgfokghdsdadefwsxdcxdf456"
-        price: 20
-  requestBodies:
-    updateProducts:
-      type: object
-      properties:
-        id: 
-          type: ProductId
-          description: Id del producto
-        category:
-          type: String
-          description: Categoria del producto
-        title:
-          type: String
-          description: Nombre del producto
-        modelo: 
-          type: String
-          description: Modelo del producto
-        description:
-          type: String
-          description: Caracteristicas del producto
-        thumbnail:
-          type: Img
-          description: Imagen del producto
-        code:
-          type: String
-          description: Codigo del producto
-        price:
-          type: Number
-          description: Precio del producto
-      example:
-        id: ProductId("sadadasdaeqwqdqrqw")
+        _id: "sadadasdaeqwqdqrqw"
         category: "Liquidos"
         title: "Juice Fruity Bears"
         modelo: "Pod Juice"

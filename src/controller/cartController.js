@@ -13,6 +13,15 @@ export const createCart = async (req, res) => {
     }
 }
 
+export const getAllCarts = async (req, res) => {
+    try {
+        const manager = new CartRepository()
+        const cart = await manager.getAllCarts()
+        res.send({ status: 'sucess', cart })
+    } catch (error) {
+        console.log('Error in getAllCarts' + error)
+    }
+}
 // Obtener carrito segun su id
 export const getCartById = async (req, res) => {
     try {

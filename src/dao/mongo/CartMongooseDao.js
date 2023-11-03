@@ -14,6 +14,10 @@ export class CartMongooseDao {
         return cart
     }
 
+    async getAllCarts() {
+        const cart = await cartSchema.find()
+        return cart
+    }
     //Eliminamos el carrito
     async deleteCart(id) {
         return await cartSchema.deleteOne({ _id: id})
