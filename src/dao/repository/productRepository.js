@@ -1,9 +1,9 @@
 
-import ProductMongooseDao from "../mongo/ProductMongooseDao.js"
+import Products from "../mongo/ProductMongooseDao.js"
 
 class ProductRepository {
     constructor() {
-        this.productDao = new ProductMongooseDao()
+        this.productDao = new Products()
     }
 
     async getProducts(limit, sort, category, page) {

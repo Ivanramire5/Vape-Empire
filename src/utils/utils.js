@@ -11,7 +11,10 @@ dotenv.config();
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 // Hasheando la contraseña
-export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+export const createHash = async(password) =>{
+    const salts = await bcrypt.genSalt(10);
+    return bcrypt.hash(password,salts);
+}
 
 // Validacion de contraseña
 export const isValidPassword = (password, user) => bcrypt.compareSync(password, user);

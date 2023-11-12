@@ -1,60 +1,86 @@
 
-import productModel from "../mongo/models/productSchema.js";
+import productSchema from "../mongo/models/productSchema.js";
 
-class ProductMongooseDao {
-    // Obtener todos los productos
-    async getProducts(aggregationStages, pagination) {
-                //console.log("Prueba 2", pagination) //Viene como un dato null
-        //const data = await productModel.paginate({ category: pagination.category }, { limit: pagination.limit, page: pagination.page})
-        const data = await productModel.find()
-        console.log(data)
-        return data
-        
-        //return productModel.aggregate(aggregationStages)
-    }
 
-    // Crear productos
-    async createProduct(data) {
-        const product = await productModel.create(data)
-        return {
-            id: product._id,
-            title: product.title,
-            description: product.description,
-            code: product.code,
-            price: product.price,
-            status: product.status,
-            stock: product.stock,
-            category: product.category,
-            thumbnail: product.thumbnail
-        }
-    }
-    // Obtener producto por ID
-    async getProductById(id) {
-        const product = await productModel.findOne({ _id: id })
+export default class Products {
 
-        return {
-            id: product._id,
-            title: product.title,
-            description: product.description,
-            code: product.code,
-            price: product.price,
-            status: product.status,
-            stock: product.stock,
-            category: product.category,
-            thumbnail: product.thumbnail
-        }
-    }
+    get = (params) => {
+        return productSchema.find(params);
+    };
+    getAll = () => {
+        return productSchema.find();
+    };
 
-    // Acutalizar producto por ID
-    async updateProduct(id, data) {
-        const product = await productModel.updateOne({ _id: id }, data)
-        return product
-    }
+    getBy = (params) => {
+        return productSchema.findOne(params);
+    };
 
-    // Borrar producto por ID
-    async deleteProduct(id) {
-        return productModel.deleteOne({ _id: id })
-    }
+    save = (doc) => {
+        return productSchema.create(doc);
+    };
+
+    update = (id, doc) => {
+        return productSchema.findByIdAndUpdate(id, { $set: doc });
+    };
+
+    delete = (id) => {
+        return productSchema.findByIdAndDelete(id);
+    };
 }
 
-export default ProductMongooseDao
+// export default class Products {
+
+//     // Obtener todos los productos
+//     async getProducts(aggregationStages, pagination) {
+//         //console.log("Prueba 2", pagination) //Viene como un dato null
+//         //const data = await productSchema.paginate({ category: pagination.category }, { limit: pagination.limit, page: pagination.page})
+//         const data = await productSchema.find()
+//         console.log(data)
+//         return data
+        
+//         //return productSchema.aggregate(aggregationStages)
+//     }
+
+//     // Crear productos
+//     async createProduct(data) {
+//         const product = await productSchema.create(data)
+//         return {
+//             id: product.id,
+//             title: product.title,
+//             description: product.description,
+//             code: product.code,
+//             price: product.price,
+//             status: product.status,
+//             stock: product.stock,
+//             category: product.category,
+//             thumbnail: product.thumbnail
+//         }
+//     }
+//     // Obtener producto por id
+//     async getProductByid(id) {
+//         const product = await productSchema.findOne({ id: id })
+
+//         return {
+//             id: product.id,
+//             title: product.title,
+//             description: product.description,
+//             code: product.code,
+//             price: product.price,
+//             status: product.status,
+//             stock: product.stock,
+//             category: product.category,
+//             thumbnail: product.thumbnail
+//         }
+//     }
+
+//     // Acutalizar producto por id
+//     async updateProduct(id, data) {
+//         const product = await productSchema.updateOne({ id: id }, data)
+//         return product
+//     }
+
+//     // Borrar producto por id
+//     async deleteProduct(id) {
+//         return productSchema.deleteOne({ id: id })
+//     }
+// }

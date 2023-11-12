@@ -1,12 +1,12 @@
 
 import UserDTO from "../DTO/users.dto.js"
-import UserMongooseDao from "../../dao/mongo/UserMongooseDao.js"
+import User from "../../dao/mongo/UserMongooseDao.js"
 import { isValidPassword } from "../../utils/utils.js"
 
 
 class UserRepository {
     constructor() {
-        this.userDao = new UserMongooseDao()
+        this.userDao = new User()
     }
 
     // Creacion del usuario

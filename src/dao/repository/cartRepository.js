@@ -1,11 +1,11 @@
 import CartMongooseDao from "../../dao/mongo/CartMongooseDao.js"
-import ProductMongooseDao from "../../dao/mongo/ProductMongooseDao.js"
+import Products from "../../dao/mongo/ProductMongooseDao.js"
 
 
 class CartRepository {
     constructor() {
         this.cartDao = new CartMongooseDao()
-        this.productDao = new ProductMongooseDao()
+        this.productDao = new Products()
     }
     // Crear carrito 
     async createCart() {

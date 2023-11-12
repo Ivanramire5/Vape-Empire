@@ -82,7 +82,8 @@ try {
   console.log(error)
 }
 
-
+//cookies
+app.use(cookieParser())
 //Variables de entorno
 // const DB_USER = process.env.DB_USER;
 // const DB_PASS = process.env.DB_PASS;
@@ -119,7 +120,7 @@ app.use(express.static("public"))
 
 // //Iniciamos el servidor
 app.listen(PORT, () => {
-  console.log(`Server connected in port ${PORT}`)
+  console.log(`Listening on port ${PORT}`)
 })
 
 // const io = new Server(httpServer);

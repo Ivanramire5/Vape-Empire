@@ -3,6 +3,8 @@ import { createHash, generateToken } from "../utils/utils.js";
 import CustomError from "../services/errors/CustomErrors.js";
 import EErrors from "../services/errors/enums.js";
 import { generateUserErrorInfo } from "../services/errors/info.js";
+import jwt from "jsonwebtoken";
+
 
 // Vista del registro y creacion del usuario
 export const createUser = async (req, res) => {
@@ -45,7 +47,30 @@ export const createUser = async (req, res) => {
         console.log('Error in createUser' + error)
     }
 }
-
+//Actualizamos un usuario
+export const updateUser = async (req, res) => {
+    try {
+        const updateBody = req.body;
+    const userId = req.params.uid;
+    const user = await usersService.getUserById(userId);
+    if (!user)
+    return res.status(404).send({ status: "error", error: "User not found" });
+    const result = await usersService.update(userId, updateBody);
+    res.send({ status: "success", message: "User updated" });
+    } catch {
+        console.log("Error al momento de actualizar un usuario"+ error)
+    }    
+};
+//Eliminamos un usuario 
+export const deleteUser = async (req, res) => {
+    try {
+        const userId = req.params.uid;
+        const result = await usersService.getUserById(userId);
+        res.send({ status: "success", message: "User deleted" });
+    } catch {
+        console.log("Error al momento de eliminar un usuario" + error)
+    }
+};
 // Vista del login
 export const getUser = async (req, res) => {
     try {
