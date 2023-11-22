@@ -1,4 +1,12 @@
-<div class="loginDiv">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body class="bodyLogin">
+    <div class="loginDiv">
     <div class="cuerpoTitle">
         <h1 class="loginTitle">LOGIN</h1>
     </div>
@@ -8,10 +16,13 @@
         <label class="letrasLogin" for="password">Password</label>
         <input class="letrasLogin" type="password" placeholder="Enter Password" id="password">
         <button class="botonLogin" type="submit">Ingresar</button>
-        <button class="botonLoginCeleste"><a href="http://localhost:8080/products">Ver nuestros productos</a></button>
-        <a href="/signup">¿No tienes cuenta?</a>
+        <a href="/signup" class="signupButton">¿No tienes cuenta?</a>
+        <a href="/api/sessions/github"><button hreclass="botonGithub" type="submit">Ingresar a github</button></a>
     </form>
-    <a href="/api/sessions/github"><button hreclass="botonGithub" type="submit">Ingresar a github</button></a>
+    
 </div>
+</body>
+</html>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/login.js"></script>

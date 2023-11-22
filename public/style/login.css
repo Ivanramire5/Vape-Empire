@@ -1,12 +1,19 @@
+.bodyLogin{
+    background-color: #FFF3E1;
+}
 .loginDiv{
     text-align: center;
     margin: 20px;
 }
 .loginTitle{
-    color: #EEEEEE;
-    background-color: #373331;
+    color: #F4F4F4;
+    background-color: #7ECA9C;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
     padding-top: 15px;
     padding-bottom: 10px;
+    border-style: solid;
+    border-color: #40394A;
 }
 #loginForm{
     display: grid;
@@ -37,4 +44,14 @@ input{
 .botonLoginCeleste{
     color:#373331;
     text-decoration: none;
+    margin-top: 10px;
+}
+.entrarLogin{
+    margin: 10px;
+}
+.signupButton{
+    color:#373331;
+    text-decoration: none;
+    margin: 10px;
+    margin-bottom: 10px;
 }

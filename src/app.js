@@ -8,6 +8,7 @@ import { addLogger } from './middlewares/loggers/logger.js'
 import session from "express-session"
 import passport from 'passport';
 import path from 'path';
+import morgan from "morgan";
 import * as dotenv from "dotenv"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from 'connect-mongo'
@@ -23,7 +24,7 @@ import SessionRoute from "./routes/session.routes.js"
 import MockRoute from "./routes/mock.routes.js"
 import ChatRouter  from "./routes/chat.routes.js"
 import loggerTest from "./routes/loggerTest.routes.js"
-
+import paymentRoutes from "./routes/payment.routes.js"
 //Dotenv
 dotenv.config();
 //Definimos el puerto
@@ -37,6 +38,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(errorHandler)
+app.use(paymentRoutes)
 
 //Swagger
 const swaggerOptions = {
@@ -106,6 +108,8 @@ app.set('views', viewsPath);
 app.use(addLogger)
 app.use("/api/loggerTest", loggerTest)
 
+//Morgan
+app.use(morgan("dev"))
 // RUTAS
 app.use("/chat", ChatRouter);
 app.use("/products", ProductsRoute);
@@ -113,7 +117,7 @@ app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);
 app.use("/mockingproducts", MockRoute)
 app.use("/apidocs", SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
-
+app.usr
 
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))

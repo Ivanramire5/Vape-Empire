@@ -1,4 +1,6 @@
-
+.bodySignup{
+    background-color: #FFF3E1;
+}
 .signupForm{
     display: grid;
     place-items: center; 
@@ -17,13 +19,33 @@
 .tituloRegister{
     text-align: center;
     font-size: 1.8rem;
-    background-color: #3DD2CC;
-    color: #373331;
+    background-color: #7ECA9C;
+    color: #FFF3E1;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
     margin: 20px;
     padding: 20px;
     border-style: solid;
-    border-color: #CBF9DA;
+    border-color: #9BF4D5;
     border-width: 5px;
+}
+.divRegistro{
+    background-color: #7ECA9C;
+    border-style: solid;
+    border-color: #373331;
+    border-radius: 5%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 20px;
+    place-items: center; 
+    padding: 20px;
+    padding-left: 40px;
+    column-gap: 100px;
+    row-gap: 10px;
+    margin-left: 230px;
+    margin-right: 230px;
 }
 .divInferior{
     display: grid;
@@ -35,4 +57,8 @@
     margin-left: 530px;
     margin-right: 530px;
     font-size: 1.2rem;
+}
+.buttonLink{
+    color:#373331;
+    text-decoration: none;
 }

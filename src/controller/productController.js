@@ -40,10 +40,12 @@ export const createProduct = async (req, res) => {
 export const productsRealTime = async (req, res) => {
     try {
         const manager = new ProductRepository()
-        const { limit, sort, category, page } = req.query
-        const products = await manager.getProducts(+limit, sort, category, +page)
+        // const result = await manager.getAll()
+        // console.log(result)
+        //const { limit, sort, category, page } = req.query
+        const products = await manager.getAll()
         console.log("referencia", products)
-        res.render("realtimeproducts", {products: products})
+        //res.render("realtimeproducts", {products})
     } catch (error) {
         console.log('Erorr en todos los productos' + error) //Error acá
     }
