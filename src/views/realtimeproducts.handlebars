@@ -1,4 +1,12 @@
 {{log products}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body class="bodySignup">
     <div>
         <div class="encabezadoTitulo">
             <h1 class="tituloRealtime">Vape Empire</h1>
@@ -10,30 +18,30 @@
         </div>
         
     <form id="productForm" method="POST" action="/realTimeProducts">
-    <ul id="productList">
+    <ul>
         {{#each products}}
-            <li>
+            <div class="productList">
                 <div class="divImage">
-                    {{!-- <img class="productImg" src={{this.thumbnail}} /> --}}
+                    <img class="productImg" src={{this.thumbnail}} />
                 </div>
                 <div class="tarjetaProducto">
-                    {{!-- <p>Id:{{this.id}}</p>
                     <h3>{{this.name}}</h3>
-                    <p class="tituloTarjeta">{{this.title}} algo</p>
-                    <p>{{this.description}}</p> --}}
-                    <p class="precioTarjeta">Precio: ${{this.price}}</p>
-                </div>
-                <div>
+                    <p class="tituloTarjeta">{{this.title}}</p>
+                    <p class="subtituloTarjeta">{{this.description}}</p>
+                    <p class="precioTarjeta">PRECIO: ${{this.price}}</p>
                     <button class="agregarCarrito">Agregar al carrito</button>
                 </div>
-            </li>
+            </div>
         {{/each}}
     </ul>
 </div>
-{{!-- <script src="/js/index.js"></script>
+</body>
+</html>
+    
+<script src="/js/index.js"></script>
 <script src="/js/realTimeProducts.js"></script>
 <script src="/js/products.js"></script>
- --}}
+
 
 
 

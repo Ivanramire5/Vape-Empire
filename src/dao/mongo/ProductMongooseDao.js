@@ -8,7 +8,7 @@ export default class Products {
         return productSchema.find(params);
     };
     getAll = () => {
-        return productSchema.find();
+        return productSchema.find().lean();
     };
 
     getBy = (params) => {

@@ -1,7 +1,7 @@
-body {
-    background-color: #EEEEEE;
-    margin: 20px;
+.bodySignup{
+    background-color: #FFF3E1;
 }
+    
 .encabezadoTitulo{
     background-color: #363636;
     padding-top: 5px;
@@ -19,27 +19,46 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 50px;
+    padding-top: 20px;
+    background-color:  #363636;
+    margin-right: 20px;;
+    padding-left: 40px;
+    padding-bottom: 20px;
+}
+.productList{
+    display: grid; 
+    grid-template-columns: 3.5fr 3fr 3fr; 
+    grid-template-rows: 1fr 1fr; 
+    margin-left: 30px;
+    gap: 2px 0px; 
+    margin-left: 100px;
+    grid-template-areas: 
+    ". . ."
+    ". . .";  
 }
 .productImg{
-    width: 600px;
-    height: 600px;
-    border-top-left-radius: 5%;
-    border-top-right-radius: 5%;
-    border-style: solid;
-    border-color: #9BF4D5;
+    width: 350px;
+    height: 350px;
+    background-color: #218f7f;
 }
 .tarjetaProducto{
-    background-color: #9BF4D5;
-    margin-left: 417.5px;
-    margin-right: 417.5px;
+    background-color:  #363636;
+    margin-left: 20px;
+    margin-right: 20px;
     padding-top: 10px;
     text-align: center;
     padding-bottom: 20px;
+
 }
 .tituloTarjeta{
-    color: #373331;
+    padding-top: 40px;
+    color: #FFF7F7;
     font-size: 1.8rem;
+}
+.subtituloTarjeta{
+    color: #FFF7F7;
+    padding-top: 60px;
+    font-size: 1.2rem;
 }
 .btnEliminar {
     background-color: #6F6F6F;
@@ -88,69 +107,7 @@ body {
     border-style: solid;
     border-color: #9BF4D5;
 }
-#productName{
-    padding: 20px;
-}
-#productTitle{
-    padding: 20px;
-}
-#productDescription{
-    padding: 20px;
-}
-#productPrice{
-    padding: 20px;
-}
-#productThumbnail{
-    padding: 20px;
-}
-#productCode{
-    padding: 20px;
-}
-#productStock{
-    padding: 20px;
-}
-.tituloFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}
-.nombreFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}
-.descripcionFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}
-.precioFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}
-.imagenFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}
-.codigoFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}   
-.stockFormulario{
-    padding: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 1.5rem;
-}
+
 .botonChat{
     padding-top: 20px;
     text-align: right;

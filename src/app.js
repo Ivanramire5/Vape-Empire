@@ -9,6 +9,7 @@ import session from "express-session"
 import passport from 'passport';
 import path from 'path';
 import morgan from "morgan";
+import cors from "cors"
 import * as dotenv from "dotenv"
 import initializePassport from "./config/passport.config.js"
 import MongoStore from 'connect-mongo'
@@ -27,18 +28,23 @@ import loggerTest from "./routes/loggerTest.routes.js"
 import paymentRoutes from "./routes/payment.routes.js"
 //Dotenv
 dotenv.config();
+
 //Definimos el puerto
-const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI
-const connection = mongoose.connect(`mongodb+srv://ivanr4amire5:y9tN2DQWF1a5tQmH@database1.hng81to.mongodb.net/e-commerce`)
-//configuration()
+const connection = mongoose.connect(MONGO_URI)
+
+//config de la pasarela de pagos
+import { PORT } from "./config/payment.config.js";
 
 //Iniciamos la app
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(errorHandler)
-app.use(paymentRoutes)
+app.use(cors())
+
+//Morgan
+app.use(morgan("dev"))
 
 //Swagger
 const swaggerOptions = {
@@ -86,15 +92,14 @@ try {
 
 //cookies
 app.use(cookieParser())
+
 //Variables de entorno
 // const DB_USER = process.env.DB_USER;
 // const DB_PASS = process.env.DB_PASS;
 // const DB_NAME = process.env.DB_NAME;
 
-//Conectar con mongo
 
 //Configuración del handlebars
-
 const viewsPath = path.resolve('src/views');
 app.engine('handlebars', engine({
   layoutsDir: `${viewsPath}/layouts`,
@@ -108,14 +113,15 @@ app.set('views', viewsPath);
 app.use(addLogger)
 app.use("/api/loggerTest", loggerTest)
 
-//Morgan
-app.use(morgan("dev"))
+
 // RUTAS
 app.use("/chat", ChatRouter);
 app.use("/products", ProductsRoute);
 app.use("/carts", CarritoRoute);
 app.use("/", SessionRoute);
 app.use("/mockingproducts", MockRoute)
+app.use(paymentRoutes)
+
 app.use("/apidocs", SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
 app.usr
 
@@ -125,44 +131,6 @@ app.use(express.static("public"))
 // //Iniciamos el servidor
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`)
+  console.log(`environment: ${process.env.NODE_ENV}`);
 })
-
-// const io = new Server(httpServer);
-// let messages = [];
-// // Configurar el evento de conexión de Socket.IO
-// io.on("connection", (socket) => {
-//   //console.log("Nuevo cliente conectado!");
-
-//   socket.on("chat message", async (msg) => {
-//     // Crea un nuevo mensaje y guárdalo en la base de datos
-//     const message = new Message({ content: msg });
-//     await message.save();
-//   });
-
-//   socket.on("message", (data) => {
-//     messages.push(data);
-//     io.emit("messageLogs", messages);
-//   });
-
-//   // Escuchar evento 'agregarProducto' y emitir 'nuevoProductoAgregado'
-//   socket.on("agregarProducto", async (newProduct) => {
-//     //console.log("Nuevo producto recibido backend:", newProduct);
-//     const product = new productModel(newProduct);
-//     const productSave = await product.save();
-//     console.log(productSave);
-//     // Agregar el nuevo producto a la lista de productos
-//     io.emit("nuevoProductoAgregado", newProduct);
-//   });
-//   socket.on("disconnect", () => {
-//     //console.log("Cliente desconectado");
-//   });
-// });
-
-// // Conexión a la base de datos
-
-// let dbConnect = mongoose.connect(MONGO_URI, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-// mongoose.set("strictQuery", true);
 

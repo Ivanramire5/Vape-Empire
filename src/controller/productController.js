@@ -45,7 +45,7 @@ export const productsRealTime = async (req, res) => {
         //const { limit, sort, category, page } = req.query
         const products = await manager.getAll()
         console.log("referencia", products)
-        //res.render("realtimeproducts", {products})
+        res.render("realtimeproducts", {products})
     } catch (error) {
         console.log('Erorr en todos los productos' + error) //Error acá
     }
