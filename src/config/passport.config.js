@@ -1,10 +1,20 @@
 import GitHubStrategy from "passport-github2"
 import passport from 'passport'
+import local from "passport-local"
 import jwt from 'passport-jwt'
+import crypto from "crypto"
 import * as dotenv from "dotenv"
-import userService from "../dao/mongo/models/userSchema.js"
-// Config dotenv
-dotenv.config();
+import { configuration } from "./payment.config.js"
+
+//importaciones
+import {cart_dao} from "../dao/index.js"
+import {user_dao} from "../dao/index.js"
+import UserRepository from "../dao/repository/userRepository.js"
+
+const userService = new UserRepository(user_dao)
+
+configuration()
+
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
 const cookieExtractor = req => {
@@ -17,10 +27,42 @@ const cookieExtractor = req => {
 
 //jwt
 const JWTstrategy = jwt.Strategy
+const LocalStrategy = local.Strategy
 const ExtractJWT = jwt.ExtractJwt
+const GithubClientId = process.env.GITHUB_CLIENT_ID
+const GithubClientSecret = process.env.GITHUB_CLIENT_SECRET
+const GithubURL = process.env.GITHUB_URL_CALLBACK
 
-const initializePassport = () => {
-
+const initializePassport = async () => {
+    passport.use("register", new LocalStrategy({
+        passReqToCallback: true,
+        usernameField: "email"},async(req,mail,pass,done)=>{
+            const {first_name,last_name,email,age,password} = req.body
+            try{
+                const userAccount = await userService.getUserByEmail(email)
+                if(userAccount){
+                    return done(null,false,{message: "Tu usuario ya existe"})
+                }else{
+                    const CART = {
+                        products : []
+                    }
+                    let cart = await cart_dao.saveCart(CART) 
+                    const newUser = { 
+                        first_name,
+                        last_name,
+                        email,
+                        age,
+                        cart: cart.id,
+                        role: "user", 
+                        password: createHash(password)
+                    }
+                    const result = await userService.createUser(newUser)
+                    return done(null,result)
+                }
+            }catch(err){
+                return done(err)
+            }
+    }))
     passport.serializeUser((user, done) => {
         done(null, user._id);
     })
@@ -44,30 +86,30 @@ const initializePassport = () => {
         }
     ))
     passport.use("github", new GitHubStrategy({
-        clientID: "Iv1.a6b3e257ff3510f8",
-        clientSecret: "38db51a7ed6fc69c00d841262fb57242918aada5",
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback"
+        clientID: GithubClientId,
+        clientSecret: GithubClientSecret,
+        callbackURL: GithubURL
     }, async (accessToken, refresToken, profile, done) => {
         try {
             console.log(profile)
-            let user = await userService.findOne({ email: `ivan1234567@gmail.com`, })
+            let user = await userService.getUserByEmail(profile?.emails[0]?.value)
             if (!user) {
                 let newUser = {
-                    first_name: profile._json.name,
-                    last_name: "F",
-                    age: 18,
-                    email: "ivan1234567@gmail.com",
-                    password: "123"
+                    name: profile.displayName,
+                    last_name: profile.displayName,
+                    email: profile?.emails[0]?.value,
+                    user: profile.username,
+                    password: crypto.randomUUID()
                 }
                 console.log("Error", newUser)
-                let result = await userService.create(newUser);
+                let result = await userService.createUser(newUser);
                 done (null, result);
             }
             else {
                 done(null, user)
             } 
-        } catch (error) {
-            return done(error)
+        } catch (err) {
+            done(err, null)
         }
     }))
 }

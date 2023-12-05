@@ -33,8 +33,6 @@ dotenv.config();
 const MONGO_URI = process.env.MONGO_URI
 const connection = mongoose.connect(MONGO_URI)
 
-//config de la pasarela de pagos
-import { PORT } from "./config/payment.config.js";
 
 //Iniciamos la app
 const app = express()
@@ -94,9 +92,11 @@ try {
 app.use(cookieParser())
 
 //Variables de entorno
-// const DB_USER = process.env.DB_USER;
-// const DB_PASS = process.env.DB_PASS;
-// const DB_NAME = process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PASS = process.env.DB_PASS;
+const DB_NAME = process.env.DB_NAME;
+const NODE_ENV = process.env.NODE_ENV;
+const ENVIRONMENT = process.env.ENVIRONMENT;
 
 
 //Configuración del handlebars
@@ -123,14 +123,20 @@ app.use("/mockingproducts", MockRoute)
 app.use(paymentRoutes)
 
 app.use("/apidocs", SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
-app.usr
+app.use
 
 //Uso de la carpeta public para ver el contenido / comunicación cliente servidor
 app.use(express.static("public"))
 
+//Port
+const PORT = process.env.PORT || 8080;
 // //Iniciamos el servidor
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`)
-  console.log(`environment: ${process.env.NODE_ENV}`);
+app.listen(PORT, (err) => {
+  if (err) {
+    console.error('Error al iniciar el servidor:', err);
+  } else {
+  console.log(`Listening on port ${PORT} node_env: ${process.env.NODE_ENV}`)
+  console.log(`environment: ${ENVIRONMENT}`);
+  }
 })
 

@@ -1,6 +1,6 @@
 import userSchema from "./models/userSchema.js"
 
-export default class Users {
+export class User {
     get = (params) => {
         return userSchema.find(params);
     };
@@ -24,23 +24,3 @@ export default class Users {
         return userSchema.findByIdAndDelete(id);
     };
 }
-
-
-// class UserMongooseDao {
-
-//     // Crear user
-//     async createUser(user) {
-//         return await userSchema.create(user)
-//     }
-
-//     // Buscar user
-//     async getUser(email) {
-//         return await userSchema.findOne({ email: email })
-//     }
-
-//     //Creamos el archivo de tipo dao para realizar el test de Users.test.js utilizando mocha
-//     async save(doc) {
-//         return await userSchema.create(doc)
-//     }
-// }
-//export default UserMongooseDao

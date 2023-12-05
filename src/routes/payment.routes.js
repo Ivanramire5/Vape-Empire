@@ -1,17 +1,9 @@
-
-import { Router } from "express"
-import { 
-    createOrder, 
-    captureOrder, 
-    cancelPayment 
-} from "../controller/paymentController.js"
+import { Router } from "express";
+import { captureOrder, cancelOrder } from "../controller/paymentController.js";
 
 const paymentRoutes = Router()
 
-paymentRoutes.post("/create-order", createOrder)
+paymentRoutes.get("/capture-order",captureOrder)
+paymentRoutes.get("/cancel-order",cancelOrder)
 
-paymentRoutes.get("/capture-order", captureOrder)
-
-paymentRoutes.get("/cancel-order", cancelPayment)
-
-export default paymentRoutes;
+export default paymentRoutes

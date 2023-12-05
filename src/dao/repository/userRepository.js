@@ -1,6 +1,6 @@
 
 import UserDTO from "../DTO/users.dto.js"
-import User from "../../dao/mongo/UserMongooseDao.js"
+import {User} from "../../dao/mongo/UserMongooseDao.js"
 import { isValidPassword } from "../../utils/utils.js"
 
 
