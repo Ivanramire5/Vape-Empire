@@ -85,13 +85,12 @@ mongoose.set("strictQuery", false);
 
 //Configuración de JWT
 const jwtOptions = {
- jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
- secretOrKey: process.env.JWT_SECRET // Asegúrate de tener esta variable de entorno configurada
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET 
 };
 
 const strategy = new Strategy(jwtOptions, function (payload, done) {
- // Aquí va tu lógica para encontrar el usuario en la base de datos usando el payload
- // ...
+
 });
 
 passport.use(strategy);
