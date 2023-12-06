@@ -1,21 +1,23 @@
-import GitHubStrategy from "passport-github2"
+import GithubStrategy from "passport-github2"
 import passport from 'passport'
 import local from "passport-local"
-import jwt from 'passport-jwt'
+import jwt, {ExtractJwt} from 'passport-jwt'
 import crypto from "crypto"
-import * as dotenv from "dotenv"
+import { google } from "googleapis"
 import { configuration } from "./payment.config.js"
-
+import { config } from "dotenv"
 //importaciones
+import { createHash } from "../utils/utils.js";
 import {cart_dao} from "../dao/index.js"
 import {user_dao} from "../dao/index.js"
 import UserRepository from "../dao/repository/userRepository.js"
 
 const userService = new UserRepository(user_dao)
 
+//Nodemailer
+const OAuth2 = google.auth.OAuth2;
 configuration()
-
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+config();
 
 const cookieExtractor = req => {
     let token = null
@@ -25,13 +27,13 @@ const cookieExtractor = req => {
     return token
 }
 
-//jwt
-const JWTstrategy = jwt.Strategy
-const LocalStrategy = local.Strategy
-const ExtractJWT = jwt.ExtractJwt
-const GithubClientId = process.env.GITHUB_CLIENT_ID
-const GithubClientSecret = process.env.GITHUB_CLIENT_SECRET
-const GithubURL = process.env.GITHUB_URL_CALLBACK
+
+
+//Oauth2
+const OauthClientId = process.env.CLIENT_ID
+const OauthClientSecret = process.env.CLIENT_SECRET
+const oauthRefreshToken = process.env.REFRESH_TOKEN
+const oauthAccessToken = process.env.ACCESS_TOKEN
 
 const initializePassport = async () => {
     passport.use("register", new LocalStrategy({
@@ -63,55 +65,89 @@ const initializePassport = async () => {
                 return done(err)
             }
     }))
-    passport.serializeUser((user, done) => {
-        done(null, user._id);
-    })
 
-    passport.deserializeUser(async (id, done) => {
-        let user = await userService.findById(id)
-        done(null, user)
-    })
+passport.serializeUser((user, done) => {
+    done(null, user._id);
+})
 
-    passport.use('jwt', new JWTstrategy(
-        {
-            jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-            secretOrKey: PRIVATE_KEY,
-        },
-        async (jwt_payload, done) => {
-            try {
-                return done(null, jwt_payload)
-            } catch (error) {
-                return done(error)
-            }
+passport.deserializeUser(async (id, done) => {
+    let user = await userService.findById(id)
+    done(null, user)
+})
+
+passport.use("jwt", new JwtStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: "CoderKeySecret"
+    }, async(jwt_payload,done)=>{
+        try{
+            return done(null,jwt_payload)
+        }catch(err){
+            return done(err)
         }
-    ))
-    passport.use("github", new GitHubStrategy({
-        clientID: GithubClientId,
-        clientSecret: GithubClientSecret,
-        callbackURL: GithubURL
-    }, async (accessToken, refresToken, profile, done) => {
-        try {
+    }  
+))
+
+passport.use("oauth2", new OAuth2({
+    clientID: OauthClientId,
+    clientSecret: OauthClientSecret,
+    authorizationURL: "https://developers.google.com/oauthplayground",
+    tokenURL: "https://developers.google.com/oauthplayground",
+    callbackURL: "https://developers.google.com/oauthplayground"
+    }, async(accessToken, refreshToken, profile, done)=>{
+        try{
             console.log(profile)
-            let user = await userService.getUserByEmail(profile?.emails[0]?.value)
-            if (!user) {
-                let newUser = {
+            const user = await userService.getUserByEmail(profile?.emails[0]?.value)
+            if(!user){ 
+                const newUser = {
                     name: profile.displayName,
                     last_name: profile.displayName,
                     email: profile?.emails[0]?.value,
                     user: profile.username,
                     password: crypto.randomUUID()
                 }
-                console.log("Error", newUser)
-                let result = await userService.createUser(newUser);
-                done (null, result);
+                const result = await userService.createUser(newUser)
+                done(null,result)
+            }else{
+                done(null,user)
             }
-            else {
-                done(null, user)
-            } 
-        } catch (err) {
-            done(err, null)
+        }catch(err){
+            done(err,null)
         }
     }))
 }
+
+//jwt
+const JwtStrategy = jwt.Strategy
+const LocalStrategy = local.Strategy
+const GithubClientId = process.env.GITHUB_CLIENT_ID
+const GithubClientSecret = process.env.GITHUB_CLIENT_SECRET
+const GithubURL = process.env.GITHUB_URL_CALLBACK
+
+passport.use("github", new GithubStrategy({
+    clientID : GithubClientId,
+    clientSecret: GithubClientSecret,
+    callbackURL: GithubURL
+    }, async(accessToken,refreshToken,profile,done)=>{
+        try{
+            console.log(profile)
+        const user = await userService.getUserByEmail(profile?.emails[0]?.value)
+        if(!user){ 
+            const newUser = {
+                name: profile.displayName,
+                last_name: profile.displayName,
+                email: profile?.emails[0]?.value,
+                user: profile.username,
+                password: crypto.randomUUID()
+            }
+            const result = await userService.createUser(newUser)
+            done(null,result)
+        }else{
+            done(null,user)
+        }
+    }catch(err){
+        done(err,null)
+    }
+}))
+
 
 export default initializePassport
